@@ -11,7 +11,9 @@
 */
 #include "project.h"
 
-
+// M x N matrix
+#define ROWS 16
+#define COLS 64
 
 int main(void)
 {
@@ -34,23 +36,55 @@ int main(void)
 //        CyDelay(1);
 //        OE_Write(0);  //OE low- turns them all on or off 
 ////    }
+    
+    int matrix[ROWS][COLS] = { 0 };
+
+    int T[10][7] = {  
+        {1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1},
+        {0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0, 0, 0},
+        {0, 0, 0, 1, 0, 0, 0},
+    };
+
+    int size_row = sizeof(T)/sizeof(T[0]);
+    int size_col = sizeof(T[0])/sizeof(T[0][0]);
+
+    // fill the 2d array with letters
+    for (int r = 0; r < ROWS; r++) {
+        if (r == size_row) {
+            break;
+        }
+        
+        for (int c = 0; c < COLS; c++) {
+            if (c == size_col) {
+                break;
+            }
+            matrix[r][c] = T[r][c];
+        }
+    }
+    
     CLK_Write(0);
-    LAT_Write(0) ;         
+    LAT_Write(0);         
     
     for(;;)
     {
-      
-        for( int j= 0 ; j<16; ++j){
-            OE_Write(1);  //OE high 
-            for(int i =0 ; i<64; ++i){         
-                R1_Write((j & 1) & i  ); 
-                B1_Write(((j>>1) & 1) & i  ); // shift to  make it every other dot a dif color 
-                G1_Write(((j>>2) & 1) & i );        
+        for(int j=0 ; j<ROWS; ++j){
+            OE_Write(1); // OE high 
+            for(int i=0 ; i<COLS; ++i){         
+                R1_Write((matrix[j][i])); 
+                B1_Write((matrix[j][i])); // shift to  make it every other dot a dif color 
+                G1_Write((matrix[j][i]));
                 A_Write(j);
-                B_Write(j>>1); 
+                B_Write(j>>1);
                 C_Write(j>>2); 
                 D_Write(j>>3);
-                R2_Write(0) ; 
+                R2_Write(0); 
                 B2_Write(0);
                 G2_Write(0); 
                 CLK_Write(0);
@@ -67,13 +101,13 @@ int main(void)
 //                LAT_Write(0);
 //            }
         
-        LAT_Write(1) ; 
+        LAT_Write(1); 
         
-        LAT_Write(0) ;       
+        LAT_Write(0);       
         OE_Write(0);
         CyDelayUs(300);   
             
-        }      
+        }  
               
         
         

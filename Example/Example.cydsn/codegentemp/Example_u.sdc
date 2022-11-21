@@ -1,3 +1,3 @@
-# Component constraints for C:\Users\Jianna Nieves\Documents\PSoC Creator\Example\Example.cydsn\TopDesign\TopDesign.cysch
-# Project: C:\Users\Jianna Nieves\Documents\PSoC Creator\Example\Example.cydsn\Example.cyprj
-# Date: Thu, 17 Nov 2022 20:03:14 GMT
+# Component constraints for C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\TopDesign\TopDesign.cysch
+# Project: C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\Example.cyprj
+# Date: Mon, 21 Nov 2022 20:17:58 GMT
