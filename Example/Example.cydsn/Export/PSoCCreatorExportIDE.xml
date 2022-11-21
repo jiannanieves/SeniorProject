@@ -37,7 +37,9 @@
       <Folder BuildType="STRICT" Path="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn">
         <Files Root="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn">
           <File BuildType="BUILD" Toolchain="">main.c</File>
+          <File BuildType="BUILD" Toolchain="">letters.c</File>
           <File BuildType="BUILD" Toolchain="">cyapicallbacks.h</File>
+          <File BuildType="BUILD" Toolchain="">letters.h</File>
         </Files>
       </Folder>
       <Folder BuildType="STRICT" Path="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\Generated_Source\PSoC5">

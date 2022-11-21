@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Example\Example\Generated_Source">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Example\Example\Source Files\letters.c">
 <ExpandedNodeIds>
 <v>Example</v>
 <v>Example\Example</v>
@@ -30,7 +30,9 @@
 <v>Example\Example\Example.cydwr\EEPROM</v>
 <v>Example\Example\Header Files</v>
 <v>Example\Example\Header Files\cyapicallbacks.h</v>
+<v>Example\Example\Header Files\letters.h</v>
 <v>Example\Example\Source Files</v>
+<v>Example\Example\Source Files\letters.c</v>
 <v>Example\Example\Source Files\main.c</v>
 <v>Example\Example\Generated_Source\PSoC5</v>
 </ExpandedNodeIds>
@@ -50,7 +52,9 @@
 <v>Example\Example\Example.cydwr\EEPROM</v>
 <v>Example\Example\Header Files</v>
 <v>Example\Example\Header Files\cyapicallbacks.h</v>
+<v>Example\Example\Header Files\letters.h</v>
 <v>Example\Example\Source Files</v>
+<v>Example\Example\Source Files\letters.c</v>
 <v>Example\Example\Source Files\main.c</v>
 <v>Example\Example\Generated_Source</v>
 </VisibleNodeIds>
@@ -98,6 +102,7 @@
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G1.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G2.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\LAT.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\letters.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\OE.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R1.lst</v>
@@ -137,6 +142,7 @@
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G1.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G2.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\LAT.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\letters.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\OE.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R1.lst</v>
@@ -145,7 +151,6 @@
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.hex</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.map</v>
 <v>Example\Example\Example.gpdsc</v>
-<v>Example\Example\Example.rpt</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStates>
@@ -181,7 +186,16 @@
 </userData>
 </CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
 <Unloaded />
-<OpenDocs />
+<OpenDocs>
+<name v=".\Example.cydsn\main.c" />
+</OpenDocs>
+<OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
+
+  Actipro Docking/MDI for WinForms
+  Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
+  http://www.actiprosoftware.com
+
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1088, 501" SelectedTabbedMdiWindow="56416dd9-0d04-449a-ae9b-21bc5c26b75e"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="c43fd346-9c55-4f28-8efd-ae4561aafb0d" /><DocumentWindow Key="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\main.c" Guid="56416dd9-0d04-449a-ae9b-21bc5c26b75e" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>
