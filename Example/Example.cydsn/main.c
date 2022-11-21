@@ -39,27 +39,31 @@ int main(void)
 ////    }
     
     int matrix[ROWS][COLS] = { 0 };
-    int size_row = sizeof(T)/sizeof(T[0]);
-    int size_col = sizeof(T[0])/sizeof(T[0][0]);
+    int size_row = sizeof(A)/sizeof(A[0]);
+    int size_col = sizeof(A[0])/sizeof(A[0][0]);
 
-    // fill the 2d array with letters
+    
+    char text[]= "A";
     int letter[15][11];
-    memcpy(letter, H, sizeof(G)); // where to change letter
-    for (int r = 0; r < ROWS; r++) {
-        if (r == size_row) {
-            break;
-        }
-        
-        for (int c = 0; c < COLS; c++) {
-            if (c == size_col) {
+    for (int l = 0; l < (int)strlen(text); l++) {
+        memcpy(letter, P, sizeof(X)); // where to change letter
+        // fill the 2d array with letters
+        for (int r = 0; r < ROWS; r++) {
+            if (r == size_row) {
                 break;
             }
-            matrix[r][c] = letter[r][c]; 
+            
+            for (int c = 0; c < COLS; c++) {
+                if (c == size_col) {
+                    break;
+                }
+                matrix[r][c] = letter[r][c];
+            }
         }
     }
     
     CLK_Write(0);
-    LAT_Write(0);         
+    LAT_Write(0);
     
     for(;;)
     {

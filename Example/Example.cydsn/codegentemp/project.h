@@ -45,6 +45,8 @@
 #include "G1.h"
 #include "R1_aliases.h"
 #include "R1.h"
+#include "UART.h"
+#include "UART_IntClock.h"
 #include "core_cm3_psoc5.h"
 #include "CyDmac.h"
 #include "CyFlash.h"

@@ -2,6 +2,7 @@
 // .\test
 
 #include <stdio.h>
+#include <string.h>
 
 // M x N matrix
 #define ROWS 16
@@ -37,18 +38,21 @@ int main(void)
     int size_col = sizeof(T[0])/sizeof(T[0][0]);
 
     // fill the 2d array with letters
-    for (int l = 0; l < 2; l++) {
-        for (int r = 0; r < ROWS; r++) {
-            if (r == size_row) {
+    char text[]= "T";
+    int letter[15][11];
+    memcpy(letter, T, sizeof(T)); // where to change letter
+
+    // fill the 2d array with letters
+    for (int r = 0; r < size_row; r++) {
+        if (r == size_row) {
+            break;
+        }
+        
+        for (int c = 0; c < size_col; c++) {
+            if (c == size_col) {
                 break;
             }
-            
-            for (int c = 0; c < COLS; c++) {
-                if (c == size_col) {
-                    break;
-                }
-                matrix[r][c] = T[r][c];
-            }
+            matrix[r][c] = letter[r][c];
         }
     }
 

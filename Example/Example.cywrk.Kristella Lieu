@@ -13,7 +13,7 @@
 <v>Output</v>
 </TreeKeys>
 <TreeStates>
-<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Example\Example\Source Files\letters.c">
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
 <ExpandedNodeIds>
 <v>Example</v>
 <v>Example\Example</v>
@@ -107,6 +107,11 @@
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\OE.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R1.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R2.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_BOOT.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_INT.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_IntClock.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_PM.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.elf</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.hex</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.map</v>
@@ -117,40 +122,6 @@
 <VisibleNodeIds>
 <v>Example</v>
 <v>Example\Example</v>
-<v>Example\Example\CortexM3</v>
-<v>Example\Example\CortexM3\ARM_GCC_541</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\A.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\B.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\B1.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\B2.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\C.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\CLK.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\Cm3Start.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\cy_em_eeprom.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\CyBootAsmGnu.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\CyDmac.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\cyfitter_cfg.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\CyFlash.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\CyLib.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\cymetadata.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\cyPm.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\CySpc.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\cyutils.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\D.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G1.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G2.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\LAT.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\letters.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\OE.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R1.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R2.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.elf</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.hex</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.map</v>
-<v>Example\Example\Example.gpdsc</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStates>
@@ -168,6 +139,7 @@
 <v>Example\Example\System Reference Guides\cy_boot_v6_10</v>
 <v>Example\Example\cy_pins_v2_20</v>
 <v>Example\Example\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
+<v>Example\Example\UART_v2_50.pdf</v>
 </ExpandedNodeIds>
 <VisibleNodeIds>
 <v>Example</v>
@@ -178,6 +150,7 @@
 <v>Example\Example\System Reference Guides\cy_boot_v6_10</v>
 <v>Example\Example\cy_pins_v2_20</v>
 <v>Example\Example\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
+<v>Example\Example\UART_v2_50.pdf</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStatesV2>
