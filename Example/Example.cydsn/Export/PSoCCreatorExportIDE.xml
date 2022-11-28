@@ -139,6 +139,8 @@
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_BOOT.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_IntClock.c</File>
           <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\UART_IntClock.h</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\rx_isr.c</File>
+          <File BuildType="BUILD" Toolchain="">Generated_Source\PSoC5\rx_isr.h</File>
         </Files>
       </Folder>
       <Folder BuildType="STRICT" Path="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\Export\ARM_GCC_Generic">

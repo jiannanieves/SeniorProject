@@ -1,5 +1,5 @@
 -- Project:   Example
--- Generated: 11/21/2022 17:50:41
+-- Generated: 11/28/2022 15:14:54
 -- PSoC Creator  4.4
 
 ENTITY Example IS
@@ -17,8 +17,8 @@ ENTITY Example IS
         B1(0)_PAD : OUT std_ulogic;
         G1(0)_PAD : OUT std_ulogic;
         R1(0)_PAD : OUT std_ulogic;
-        Rx_1(0)_PAD : IN std_ulogic;
-        Tx_1(0)_PAD : OUT std_ulogic);
+        Rx(0)_PAD : IN std_ulogic;
+        Tx(0)_PAD : OUT std_ulogic);
     ATTRIBUTE voltage_VDDABUF OF __DEFAULT__ : ENTITY IS 5e0;
     ATTRIBUTE voltage_VDDA OF __DEFAULT__ : ENTITY IS 5e0;
     ATTRIBUTE voltage_VUSB OF __DEFAULT__ : ENTITY IS 5e0;
@@ -52,13 +52,14 @@ ARCHITECTURE __DEFAULT__ OF Example IS
     SIGNAL G1(0)__PA : bit;
     SIGNAL G2(0)__PA : bit;
     SIGNAL LAT(0)__PA : bit;
+    SIGNAL Net_10 : bit;
     SIGNAL Net_11 : bit;
     SIGNAL Net_7 : bit;
     SIGNAL OE(0)__PA : bit;
     SIGNAL R1(0)__PA : bit;
     SIGNAL R2(0)__PA : bit;
-    SIGNAL Rx_1(0)__PA : bit;
-    SIGNAL Tx_1(0)__PA : bit;
+    SIGNAL Rx(0)__PA : bit;
+    SIGNAL Tx(0)__PA : bit;
     SIGNAL \UART:BUART:counter_load_not\ : bit;
     SIGNAL \UART:BUART:pollcount_0\ : bit;
     SIGNAL \UART:BUART:pollcount_1\ : bit;
@@ -135,7 +136,10 @@ ARCHITECTURE __DEFAULT__ OF Example IS
     ATTRIBUTE Location OF G1(0) : LABEL IS "P1[7]";
     ATTRIBUTE lib_model OF R1(0) : LABEL IS "iocell13";
     ATTRIBUTE Location OF R1(0) : LABEL IS "P1[6]";
-    ATTRIBUTE lib_model OF Rx_1(0) : LABEL IS "iocell_ireg";
+    ATTRIBUTE lib_model OF Rx(0) : LABEL IS "iocell14";
+    ATTRIBUTE Location OF Rx(0) : LABEL IS "P2[0]";
+    ATTRIBUTE lib_model OF Tx(0) : LABEL IS "iocell15";
+    ATTRIBUTE Location OF Tx(0) : LABEL IS "P2[1]";
     ATTRIBUTE lib_model OF Net_11 : LABEL IS "macrocell1";
     ATTRIBUTE lib_model OF \UART:BUART:counter_load_not\ : LABEL IS "macrocell2";
     ATTRIBUTE lib_model OF \UART:BUART:tx_status_0\ : LABEL IS "macrocell3";
@@ -367,6 +371,11 @@ ARCHITECTURE __DEFAULT__ OF Example IS
     ATTRIBUTE udb_chain OF datapathcell : COMPONENT IS "ce0i,ce0,cl0i,cl0,z0i,z0,ff0i,ff0,ce1i,ce1,cl1i,cl1,z1i,z1,ff1i,ff1,cap0i,cap0,cap1i,cap1,ci,co_msb,sir,sol_msb,cfbi,cfbo,sil,sor,cmsbi,cmsbo";
     ATTRIBUTE chain_lsb OF datapathcell : COMPONENT IS "ce0i,cl0i,z0i,ff0i,ce1i,cl1i,z1i,ff1i,cap0i,cap1i,ci,sir,cfbi,sor,cmsbo";
     ATTRIBUTE chain_msb OF datapathcell : COMPONENT IS "ce0,cl0,z0,ff0,ce1,cl1,z1,ff1,cap0,cap1,co_msb,sol_msb,cfbo,sil,cmsbi";
+    COMPONENT interrupt
+        PORT (
+            interrupt : IN std_ulogic;
+            clock : IN std_ulogic);
+    END COMPONENT;
     COMPONENT iocell
         PORT (
             oe : IN std_ulogic;
@@ -1656,7 +1665,7 @@ BEGIN
             out_clock_en => '1',
             out_reset => '0');
 
-    Rx_1:logicalport
+    Rx:logicalport
         GENERIC MAP(
             drive_mode => "001",
             ibuf_enabled => "1",
@@ -1728,19 +1737,19 @@ BEGIN
             out_reset => open,
             in_clock => open);
 
-    Rx_1(0):iocell
+    Rx(0):iocell
         GENERIC MAP(
             in_sync_mode => 2,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "Rx_1",
+            logicalport => "Rx",
             logicalport_pin_id => 0,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000101")
         PORT MAP(
-            pa_out => Rx_1(0)__PA,
+            pa_out => Rx(0)__PA,
             oe => open,
             fb => Net_7,
-            pad_in => Rx_1(0)_PAD,
+            pad_in => Rx(0)_PAD,
             in_clock => ClockBlock_BUS_CLK,
             in_clock_en => '1',
             in_reset => '0',
@@ -1748,7 +1757,7 @@ BEGIN
             out_clock_en => '1',
             out_reset => '0');
 
-    Tx_1:logicalport
+    Tx:logicalport
         GENERIC MAP(
             drive_mode => "110",
             ibuf_enabled => "1",
@@ -1819,20 +1828,20 @@ BEGIN
             out_clock_en => open,
             out_reset => open);
 
-    Tx_1(0):iocell
+    Tx(0):iocell
         GENERIC MAP(
             in_sync_mode => 0,
             out_sync_mode => 0,
             oe_sync_mode => 0,
-            logicalport => "Tx_1",
+            logicalport => "Tx",
             logicalport_pin_id => 0,
             io_capabilities => "0000000000000000000000000000000000000000000000000000000000000101")
         PORT MAP(
-            pa_out => Tx_1(0)__PA,
+            pa_out => Tx(0)__PA,
             oe => open,
             pin_input => Net_11,
-            pad_out => Tx_1(0)_PAD,
-            pad_in => Tx_1(0)_PAD,
+            pad_out => Tx(0)_PAD,
+            pad_in => Tx(0)_PAD,
             in_clock => open,
             in_clock_en => '1',
             in_reset => '0',
@@ -2095,7 +2104,16 @@ BEGIN
             status_3 => \UART:BUART:rx_status_3\,
             status_2 => open,
             status_1 => open,
-            status_0 => open);
+            status_0 => open,
+            interrupt => Net_10);
+
+    rx_isr:interrupt
+        GENERIC MAP(
+            int_type => "10",
+            is_nmi => 0)
+        PORT MAP(
+            interrupt => Net_10,
+            clock => ClockBlock_BUS_CLK);
 
     \UART:BUART:txn\:macrocell
         GENERIC MAP(

@@ -46,6 +46,7 @@
 #include "R1_aliases.h"
 #include "R1.h"
 #include "UART.h"
+#include "rx_isr.h"
 #include "UART_IntClock.h"
 #include "core_cm3_psoc5.h"
 #include "CyDmac.h"

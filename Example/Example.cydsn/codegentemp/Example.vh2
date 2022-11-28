@@ -2,7 +2,7 @@
 --	Conversion of Example.v to vh2:
 --
 --	Cypress Semiconductor - WARP Version 6.3 IR 41
---	Mon Nov 21 17:50:40 2022
+--	Mon Nov 28 15:14:53 2022
 --
 
 USE cypress.cypress.all;
@@ -417,15 +417,15 @@ SIGNAL \UART:BUART:sRX:MODULE_5:gte\ : bit;
 ATTRIBUTE port_state_att of \UART:BUART:sRX:MODULE_5:gte\:SIGNAL IS 2;
 SIGNAL \UART:BUART:sRX:MODULE_5:lte\ : bit;
 ATTRIBUTE port_state_att of \UART:BUART:sRX:MODULE_5:lte\:SIGNAL IS 2;
-SIGNAL tmpOE__Rx_1_net_0 : bit;
-SIGNAL tmpIO_0__Rx_1_net_0 : bit;
-TERMINAL tmpSIOVREF__Rx_1_net_0 : bit;
-SIGNAL tmpINTERRUPT_0__Rx_1_net_0 : bit;
-SIGNAL tmpOE__Tx_1_net_0 : bit;
-SIGNAL tmpFB_0__Tx_1_net_0 : bit;
-SIGNAL tmpIO_0__Tx_1_net_0 : bit;
-TERMINAL tmpSIOVREF__Tx_1_net_0 : bit;
-SIGNAL tmpINTERRUPT_0__Tx_1_net_0 : bit;
+SIGNAL tmpOE__Rx_net_0 : bit;
+SIGNAL tmpIO_0__Rx_net_0 : bit;
+TERMINAL tmpSIOVREF__Rx_net_0 : bit;
+SIGNAL tmpINTERRUPT_0__Rx_net_0 : bit;
+SIGNAL tmpOE__Tx_net_0 : bit;
+SIGNAL tmpFB_0__Tx_net_0 : bit;
+SIGNAL tmpIO_0__Tx_net_0 : bit;
+TERMINAL tmpSIOVREF__Tx_net_0 : bit;
+SIGNAL tmpINTERRUPT_0__Tx_net_0 : bit;
 SIGNAL \UART:BUART:reset_reg\\D\ : bit;
 SIGNAL \UART:BUART:txn\\D\ : bit;
 SIGNAL \UART:BUART:tx_state_1\\D\ : bit;
@@ -1484,7 +1484,7 @@ R1:cy_psoc3_pins_v1_10
 		id=>"b0162966-0060-4af5-82d1-fcb491ad7619/be0a0e37-ad17-42ca-b5a1-1a654d736358",
 		source_clock_id=>"",
 		divisor=>0,
-		period=>"2170138888.88889",
+		period=>"13020833333.3333",
 		is_direct=>'0',
 		is_digital=>'1')
 	PORT MAP(clock_out=>\UART:Net_9\,
@@ -1783,8 +1783,8 @@ R1:cy_psoc3_pins_v1_10
 		clock=>\UART:BUART:clock_op\,
 		status=>(zero, \UART:BUART:rx_status_5\, \UART:BUART:rx_status_4\, \UART:BUART:rx_status_3\,
 			\UART:BUART:rx_status_2\, zero, zero),
-		interrupt=>\UART:BUART:rx_interrupt_out\);
-Rx_1:cy_psoc3_pins_v1_10
+		interrupt=>Net_10);
+Rx:cy_psoc3_pins_v1_10
 	GENERIC MAP(id=>"1425177d-0d0e-4468-8bcc-e638e5509a9b",
 		drive_mode=>"001",
 		ibuf_enabled=>"1",
@@ -1844,8 +1844,8 @@ Rx_1:cy_psoc3_pins_v1_10
 		y=>(zero),
 		fb=>Net_7,
 		analog=>(open),
-		io=>(tmpIO_0__Rx_1_net_0),
-		siovref=>(tmpSIOVREF__Rx_1_net_0),
+		io=>(tmpIO_0__Rx_net_0),
+		siovref=>(tmpSIOVREF__Rx_net_0),
 		annotation=>(open),
 		in_clock=>zero,
 		in_clock_en=>tmpOE__OE_net_0,
@@ -1853,8 +1853,8 @@ Rx_1:cy_psoc3_pins_v1_10
 		out_clock=>zero,
 		out_clock_en=>tmpOE__OE_net_0,
 		out_reset=>zero,
-		interrupt=>tmpINTERRUPT_0__Rx_1_net_0);
-Tx_1:cy_psoc3_pins_v1_10
+		interrupt=>tmpINTERRUPT_0__Rx_net_0);
+Tx:cy_psoc3_pins_v1_10
 	GENERIC MAP(id=>"ed092b9b-d398-4703-be89-cebf998501f6",
 		drive_mode=>"110",
 		ibuf_enabled=>"1",
@@ -1912,10 +1912,10 @@ Tx_1:cy_psoc3_pins_v1_10
 		input_buffer_sel=>"00")
 	PORT MAP(oe=>(tmpOE__OE_net_0),
 		y=>Net_11,
-		fb=>(tmpFB_0__Tx_1_net_0),
+		fb=>(tmpFB_0__Tx_net_0),
 		analog=>(open),
-		io=>(tmpIO_0__Tx_1_net_0),
-		siovref=>(tmpSIOVREF__Tx_1_net_0),
+		io=>(tmpIO_0__Tx_net_0),
+		siovref=>(tmpSIOVREF__Tx_net_0),
 		annotation=>(open),
 		in_clock=>zero,
 		in_clock_en=>tmpOE__OE_net_0,
@@ -1923,7 +1923,11 @@ Tx_1:cy_psoc3_pins_v1_10
 		out_clock=>zero,
 		out_clock_en=>tmpOE__OE_net_0,
 		out_reset=>zero,
-		interrupt=>tmpINTERRUPT_0__Tx_1_net_0);
+		interrupt=>tmpINTERRUPT_0__Tx_net_0);
+rx_isr:cy_isr_v1_0
+	GENERIC MAP(int_type=>"10",
+		is_nmi=>'0')
+	PORT MAP(int_signal=>Net_10);
 \UART:BUART:reset_reg\:cy_dff
 	PORT MAP(d=>zero,
 		clk=>\UART:BUART:clock_op\,

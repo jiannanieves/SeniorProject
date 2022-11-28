@@ -12,6 +12,10 @@
 
 /* [] END OF FILE */
 
+typedef struct {
+    int m[15][11];
+} letter2d;
+
 extern int A[15][11];
 extern int A[15][11];
 extern int B[15][11];

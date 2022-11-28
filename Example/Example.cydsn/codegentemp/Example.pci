@@ -1,5 +1,5 @@
 # Example
-# 2022-11-21 22:50:41Z
+# 2022-11-28 20:14:54Z
 
 # IO_0@[IOP=(1)][IoId=(0)] is reserved: SWDDebugEnabled
 dont_use_io iocell 1 0
@@ -20,3 +20,5 @@ set_io "R2(0)" iocell 2 4
 set_io "B1(0)" iocell 1 4
 set_io "G1(0)" iocell 1 7
 set_io "R1(0)" iocell 1 6
+set_io "Rx(0)" iocell 2 0
+set_io "Tx(0)" iocell 2 1

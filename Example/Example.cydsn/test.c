@@ -8,6 +8,41 @@
 #define ROWS 16
 #define COLS 64
 
+
+
+typedef struct {
+    int m[15][11];
+} letter2d;
+
+letter2d get_letter_matrix(char c) {
+    int T[15][11] = {  
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0}
+    };
+    letter2d result;
+    if (c == 'T') {
+        // result.m = T;
+        memcpy(result.m, T, sizeof(T));
+    }
+    else {
+        memcpy(result.m, 0, sizeof(0));
+    }
+    return result;
+}
+
 int main(void)
 {
     int matrix[ROWS][COLS] = { 0 };
@@ -30,33 +65,48 @@ int main(void)
         {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0}
     };
 
-    // Kristella - A B C D E F G H
-    // Jianna    - I J K L M N O P
-    // Nicolette - Q R S T U V X Y Z
+    char text[3] = {'T', 'T', 'T'};
 
-    int size_row = sizeof(T)/sizeof(T[0]);
-    int size_col = sizeof(T[0])/sizeof(T[0][0]);
+    letter2d letter;
+    int letters_concat[15][sizeof text * 11] = { 0 };
+    
+    int start_col;
+    int letter_row_sz;
+    int letter_col_sz;
+    for (int d = 0; d < sizeof text; d++) {
+        letter = get_letter_matrix(text[d]);
+        letter_row_sz = sizeof(letter.m)/sizeof(letter.m[0]);
+        letter_col_sz = sizeof(letter.m[0])/sizeof(letter.m[0][0]);
+        start_col = 11 * d;
 
-    // fill the 2d array with letters
-    char text[]= "T";
-    int letter[15][11];
-    memcpy(letter, T, sizeof(T)); // where to change letter
-
-    // fill the 2d array with letters
-    for (int r = 0; r < size_row; r++) {
-        if (r == size_row) {
-            break;
-        }
-        
-        for (int c = 0; c < size_col; c++) {
-            if (c == size_col) {
-                break;
+        for (int r = 0; r < letter_row_sz; r++) {
+            start_col = 11 * d;
+            for (int c = 0; c < letter_col_sz; c++) {
+                // matrix[r][start_col] = letter.m[r][c];
+                letters_concat[r][start_col] = letter.m[r][c];
+                start_col++;
             }
-            matrix[r][c] = letter[r][c];
         }
     }
 
     // print the 2D array
+    int sr = sizeof(letters_concat)/sizeof(letters_concat[0]);
+    int sc = sizeof(letters_concat[0])/sizeof(letters_concat[0][0]);
+    // for (int i = 0; i < sr; i++) {
+    //     for (int j = 0; j < sc; j++) {
+    //         printf("%d ", letters_concat[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+
+    // fill the 2d array with letters
+    for (int r = 0; r < sr; r++) {
+        for (int c = 0; c < sc; c++) {
+            matrix[r+1][c+1] = letters_concat[r][c];
+        }
+    }
+
+    // print the 2d array
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             printf("%d ", matrix[i][j]);
@@ -66,3 +116,5 @@ int main(void)
 
     return 0;
 }
+
+

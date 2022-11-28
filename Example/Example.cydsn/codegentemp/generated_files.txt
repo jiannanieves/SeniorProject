@@ -62,6 +62,8 @@
   <file name="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\codegentemp\UART_PM.c" value="SOURCE_C;CortexM3;;;;UART" />
   <file name="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\codegentemp\UART_INT.c" value="SOURCE_C;CortexM3;;;;UART" />
   <file name="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\codegentemp\UART_BOOT.c" value="SOURCE_C;CortexM3;;;;UART" />
+  <file name="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\codegentemp\rx_isr.c" value="SOURCE_C;CortexM3;;;;rx_isr" />
+  <file name="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\codegentemp\rx_isr.h" value="HEADER;;;;;rx_isr" />
   <file name="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\codegentemp\UART_IntClock.c" value="SOURCE_C;CortexM3;;;;UART_IntClock" />
   <file name="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\codegentemp\UART_IntClock.h" value="HEADER;;;;;UART_IntClock" />
   <file name="C:\Users\Kristella Lieu\Desktop\SeniorProject\Example\Example.cydsn\codegentemp\cm3gcc.ld" value="LINKER_SCRIPT;;;b98f980c-3bd1-4fc7-a887-c56a20a46fdd;;cy_boot" />
