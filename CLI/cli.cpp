@@ -1,3 +1,11 @@
+// Kristella Lieu
+//
+// Run the following commands to run the CLI:
+//
+// g++ cli.cpp -o cli.exe
+// cli.exe
+//
+
 #include <iostream>
 #include <string>
 #include <windows.h>
