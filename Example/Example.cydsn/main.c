@@ -15,14 +15,14 @@
 
 // M x N matrix
 #define ROWS 16
-#define COLS 64
+#define COLS 192
 
 
 // Buffer for UART data
-char input[1];
+char input[17];
 int i = 0; // index 
 // Store user text
-char text[1];
+char text[17];
 
 CY_ISR(RxIsr)
 {
@@ -194,12 +194,12 @@ int main(void)
                 G2_Write(0); 
                 CLK_Write(0);
                 CLK_Write(1);
-                CLK_Write(0);
-            } // end of col loop
+                CLK_Write(0);                
+            } // end of col loop            
             LAT_Write(1);
             LAT_Write(0);       
             OE_Write(0);
-            CyDelayUs(300);
+            CyDelayUs(500);
         } // end of row loop
         
         i = 0;

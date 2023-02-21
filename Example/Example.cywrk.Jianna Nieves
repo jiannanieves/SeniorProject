@@ -36,9 +36,24 @@
 <v>Example\Example\Generated_Source\PSoC5</v>
 </ExpandedNodeIds>
 <VisibleNodeIds>
+<v>Example</v>
+<v>Example\Example</v>
+<v>Example\Example\TopDesign</v>
+<v>Example\Example\Example.cydwr</v>
+<v>Example\Example\Example.cydwr\Pins</v>
+<v>Example\Example\Example.cydwr\Analog</v>
+<v>Example\Example\Example.cydwr\Clocks</v>
+<v>Example\Example\Example.cydwr\Interrupts</v>
+<v>Example\Example\Example.cydwr\DMA</v>
+<v>Example\Example\Example.cydwr\System</v>
+<v>Example\Example\Example.cydwr\Directives</v>
+<v>Example\Example\Example.cydwr\Flash Security</v>
+<v>Example\Example\Example.cydwr\EEPROM</v>
 <v>Example\Example\Header Files</v>
 <v>Example\Example\Header Files\cyapicallbacks.h</v>
+<v>Example\Example\Header Files\letters.h</v>
 <v>Example\Example\Source Files</v>
+<v>Example\Example\Source Files\letters.c</v>
 <v>Example\Example\Source Files\main.c</v>
 <v>Example\Example\Generated_Source</v>
 <v>Example\Example\Generated_Source\PSoC5</v>
@@ -56,21 +71,6 @@
 <v>Example\Example\Generated_Source\PSoC5\LAT</v>
 <v>Example\Example\Generated_Source\PSoC5\OE</v>
 <v>Example\Example\Generated_Source\PSoC5\R1</v>
-<v>Example\Example\Generated_Source\PSoC5\R2</v>
-<v>Example\Example\Generated_Source\PSoC5\cycodeshareexport.ld</v>
-<v>Example\Example\Generated_Source\PSoC5\cycodeshareimport.ld</v>
-<v>Example\Example\Generated_Source\PSoC5\cycodeshareimport.scat</v>
-<v>Example\Example\Generated_Source\PSoC5\cydevice.h</v>
-<v>Example\Example\Generated_Source\PSoC5\cydevice_trm.h</v>
-<v>Example\Example\Generated_Source\PSoC5\cydevicegnu.inc</v>
-<v>Example\Example\Generated_Source\PSoC5\cydevicegnu_trm.inc</v>
-<v>Example\Example\Generated_Source\PSoC5\cydeviceiar.inc</v>
-<v>Example\Example\Generated_Source\PSoC5\cydeviceiar_trm.inc</v>
-<v>Example\Example\Generated_Source\PSoC5\cydevicerv.inc</v>
-<v>Example\Example\Generated_Source\PSoC5\cydevicerv_trm.inc</v>
-<v>Example\Example\Generated_Source\PSoC5\cydisabledsheets.h</v>
-<v>Example\Example\Generated_Source\PSoC5\cyfitter.h</v>
-<v>Example\Example\Generated_Source\PSoC5\cyfitter_cfg.c</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 <CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
@@ -116,10 +116,17 @@
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G1.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G2.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\LAT.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\letters.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\OE.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R1.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R2.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\rx_isr.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_BOOT.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_INT.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_IntClock.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_PM.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.elf</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.hex</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.map</v>
@@ -155,14 +162,14 @@
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G1.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\G2.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\LAT.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\letters.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\OE.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R1.lst</v>
 <v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\R2.lst</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.elf</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.hex</v>
-<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Example.map</v>
-<v>Example\Example\Example.gpdsc</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\rx_isr.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART.lst</v>
+<v>Example\Example\CortexM3\ARM_GCC_541\Debug\Listing Files\UART_BOOT.lst</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStates>
@@ -178,8 +185,10 @@
 <v>Example\Example\CY8C58LP Family Datasheet</v>
 <v>Example\Example\System Reference Guides</v>
 <v>Example\Example\System Reference Guides\cy_boot_v6_10</v>
+<v>Example\Example\cy_isr_v1_71.pdf</v>
 <v>Example\Example\cy_pins_v2_20</v>
 <v>Example\Example\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
+<v>Example\Example\UART_v2_50.pdf</v>
 </ExpandedNodeIds>
 <VisibleNodeIds>
 <v>Example</v>
@@ -188,20 +197,29 @@
 <v>Example\Example\CY8C58LP Family Datasheet</v>
 <v>Example\Example\System Reference Guides</v>
 <v>Example\Example\System Reference Guides\cy_boot_v6_10</v>
+<v>Example\Example\cy_isr_v1_71.pdf</v>
 <v>Example\Example\cy_pins_v2_20</v>
 <v>Example\Example\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
+<v>Example\Example\UART_v2_50.pdf</v>
 </VisibleNodeIds>
 </CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
 </TreeStatesV2>
 </CyGuid_1b906a0f-a7b6-4e4d-a428-82f98b53cb35>
+</dataGuid>
+<dataGuid v="6c335137-fa19-46ce-bc2d-2fbeb6d5f2a2">
+<CyGuid_70084457-cd6a-4593-9ed0-7f6eeb432dc2 type_name="CyDesigner.Common.ProjMgmt.GUI.CyDependenciesCustomData" version="1">
+<dictName v=".\Example.cydsn\Example.cyprj">
+<listName />
+</dictName>
+</CyGuid_70084457-cd6a-4593-9ed0-7f6eeb432dc2>
 </dataGuid>
 </userData>
 </CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
 <Unloaded />
 <OpenDocs>
 <name v=".\Example.cydsn\TopDesign\TopDesign.cysch" />
-<name v=".\Example.cydsn\Example.cydwr" />
 <name v=".\Example.cydsn\main.c" />
+<name v=".\Example.cydsn\letters.c" />
 </OpenDocs>
 <OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
 
@@ -209,7 +227,7 @@
   Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
   http://www.actiprosoftware.com
 
---><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1236, 551" SelectedTabbedMdiWindow="c3920c7a-19a0-43e2-98f7-94a305d08662"><DocumentWindow Key="C:\Users\Jianna Nieves\Documents\PSoC Creator\Example\Example.cydsn\TopDesign\TopDesign.cysch" Guid="3ae04817-e4dc-4e5f-9000-b15b2029f9fd" /><DocumentWindow Key="C:\Users\Jianna Nieves\Documents\PSoC Creator\Example\Example.cydsn\Example.cydwr" Guid="8204e491-d9c3-40ae-9e5f-1f4d9521b0ac" /><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="adf79e74-c8df-4b31-b1e9-279f6a7c9944" /><DocumentWindow Key="C:\Users\Jianna Nieves\Documents\PSoC Creator\Example\Example.cydsn\main.c" Guid="c3920c7a-19a0-43e2-98f7-94a305d08662" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="1236, 567" SelectedTabbedMdiWindow="433af776-9cab-4b16-979a-6c48a4315fee"><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="adf79e74-c8df-4b31-b1e9-279f6a7c9944" /><DocumentWindow Key="C:\Users\Jianna Nieves\Documents\PSoC Creator\SeniorProject\Example\Example.cydsn\TopDesign\TopDesign.cysch" Guid="f9b52339-87c0-4869-8957-020b8dd54582" /><DocumentWindow Key="C:\Users\Jianna Nieves\Documents\PSoC Creator\SeniorProject\Example\Example.cydsn\main.c" Guid="433af776-9cab-4b16-979a-6c48a4315fee" /><DocumentWindow Key="C:\Users\Jianna Nieves\Documents\PSoC Creator\SeniorProject\Example\Example.cydsn\letters.c" Guid="655e4fb6-6b51-4a85-9ec9-da7d56389dc9" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
 <config v="" />
 <AutoUpdate v="true" />
 </CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>

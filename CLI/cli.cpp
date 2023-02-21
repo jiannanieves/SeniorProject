@@ -31,7 +31,7 @@ int main() {
     // cout << userOptions.scrollIndex << endl;
 
     string s = userOptions.text;
-    s = s[0]; // for now, display only first letter of string
+    // s = s[0]; // for now, display only first letter of string
 
     // Convert string to uppercase
     for (int i = 0; i < s.length(); i++) {
@@ -57,7 +57,7 @@ int main() {
     // Open the highest available serial port number
     fprintf(stderr, "Opening serial port...");
     hSerial = CreateFile(
-        "COM5", GENERIC_READ|GENERIC_WRITE, 0, NULL,
+        "COM3", GENERIC_READ|GENERIC_WRITE, 0, NULL, //CHANGE PER PC 
         // _T("\\\\.\\COM5"), GENERIC_READ|GENERIC_WRITE, 0, NULL,
         // OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL );
         OPEN_EXISTING, 0, NULL );
