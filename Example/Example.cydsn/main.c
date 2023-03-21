@@ -1,4 +1,4 @@
-/* ========================================
+* ========================================
  *
  * Copyright YOUR COMPANY, THE YEAR
  * All Rights Reserved
@@ -9,75 +9,209 @@
  *
  * ========================================
 */
+#include <stdlib.h>
 #include "project.h"
+#include "letters.h"
 
+// M x N matrix
+#define ROWS 16
+#define COLS 192 // 64
 
+uint8 timer_flag = 0;
+void ms_delay (uint32 ms);
+
+// Buffer for UART data
+char input[16];             //change to 18 maybe?
+int i = 0; // index 
+// Store user text          //change to 18 maybe?
+char text[16];
+
+CY_ISR(RxIsr)
+{
+    rx_isr_ClearPending();
+    while (UART_GetRxBufferSize() > 0) 
+    {
+        input[i] = UART_GetByte();
+        i++;
+    }
+}
+
+letter2d get_letter_matrix(char c) {
+    letter2d result;
+    int empty[15][11] = { 0 };
+    switch (c) {
+        case 'A':
+            memcpy(result.m, A, sizeof(A));
+            return result;
+            break;
+        case 'B':
+            memcpy(result.m, B, sizeof(B));
+            break;
+        case 'C':
+            memcpy(result.m, C, sizeof(C));
+            break;
+        case 'D':
+            memcpy(result.m, D, sizeof(D));
+            break;
+        case 'E':
+            memcpy(result.m, E, sizeof(E));
+            break;
+        case 'F':
+            memcpy(result.m, F, sizeof(F));
+            break;
+        case 'G':
+            memcpy(result.m, G, sizeof(G));
+            break;
+        case 'H':
+            memcpy(result.m, H, sizeof(H));
+            break;
+        case 'I':
+            memcpy(result.m, I, sizeof(I));
+            break;
+        case 'J':
+            memcpy(result.m, J, sizeof(J));
+            break;
+        case 'K':
+            memcpy(result.m, K, sizeof(K));
+            break;
+        case 'L':
+            memcpy(result.m, L, sizeof(L));
+            break;
+        case 'M':
+            memcpy(result.m, M, sizeof(M));
+            break;
+        case 'N':
+            memcpy(result.m, N, sizeof(N));
+            break;
+        case 'O':
+            memcpy(result.m, O, sizeof(O));
+            break;
+        case 'P':
+            memcpy(result.m, P, sizeof(P));
+            break;
+        case 'Q':
+            memcpy(result.m, Q, sizeof(Q));
+            break;
+        case 'R':
+            memcpy(result.m, R, sizeof(R));
+            break;
+        case 'S':
+            memcpy(result.m, S, sizeof(S));
+            break;
+        case 'T':
+            memcpy(result.m, T, sizeof(T));
+            break;
+        case 'U':
+            memcpy(result.m, U, sizeof(U));
+            break;
+        case 'V':
+            memcpy(result.m, V, sizeof(V));
+            break;
+        case 'W':
+            memcpy(result.m, W, sizeof(W));
+            break;
+        case 'X':
+            memcpy(result.m, X, sizeof(X));
+            break;
+        case 'Y':
+            memcpy(result.m, Y, sizeof(Y));
+            break;
+        case 'Z':
+            memcpy(result.m, Z, sizeof(Z));
+            break;
+        default:
+            memcpy(result.m, empty, sizeof(empty));
+            break;
+    }
+    return result;
+}
 
 int main(void)
 {
+    UART_ClearRxBuffer();
+    UART_ClearTxBuffer();
+    rx_isr_ClearPending();
+    rx_isr_StartEx(RxIsr);
+    UART_Start();
+    
+    int matrix[ROWS][COLS] = { 0 };
+    
     CyGlobalIntEnable; /* Enable global interrupts. */
-////    for ( int i = 0; i< 16; ++i){
-//        R1_Write(1) ;
-//        B1_Write(1);
-//        G1_Write(1); 
-//        A_Write(1); 
-//        B_Write(1); 
-//        C_Write(1); 
-//        D_Write(1);
-//        
-//        LAT_Write(0);         
-//        CLK_Write(0);
-//        CLK_Write(1);
-//        CLK_Write(0); 
-//        LAT_Write(1) ; 
-//        //LAT_Write(0) ; 
-//        CyDelay(1);
-//        OE_Write(0);  //OE low- turns them all on or off 
-////    }
+
     CLK_Write(0);
-    LAT_Write(0) ;         
+    LAT_Write(0);
     
     for(;;)
     {
-      
-        for( int j= 0 ; j<16; ++j){
-            OE_Write(1);  //OE high 
-            for(int i =0 ; i<64; ++i){         
-                R1_Write((j & 1) & i  ); 
-                B1_Write(((j>>1) & 1) & i  ); // shift to  make it every other dot a dif color 
-                G1_Write(((j>>2) & 1) & i );        
-                A_Write(j);
-                B_Write(j>>1); 
-                C_Write(j>>2); 
-                D_Write(j>>3);
-                R2_Write(0) ; 
-                B2_Write(0);
-                G2_Write(0); 
-                CLK_Write(0);
-                //CyDelay(1);
-                CLK_Write(1);
-                //CyDelay(1);
-                CLK_Write(0);
-                
-            } // end of row
-//            if(j&1){
-//                LAT_Write(1) ; 
-//            }
-//            else{
-//                LAT_Write(0);
-//            }
         
-        LAT_Write(1) ; 
+        strcpy(text, input); // copy input buffer into text
         
-        LAT_Write(0) ;       
-        OE_Write(0);
-        CyDelayUs(300);   
+        // concatenate the letters together into letters_concat
+        letter2d letter;
+        int letters_concat[15][sizeof text * 11] = { 0 };
+        int start_col;
+        int letter_row_sz;
+        int letter_col_sz;
+        for (int d = 0; d < (int)sizeof text; d++) {
+            letter = get_letter_matrix(text[d]); // get letter bitmapping for the current character
+            letter_row_sz = sizeof(letter.m)/sizeof(letter.m[0]);
+            letter_col_sz = sizeof(letter.m[0])/sizeof(letter.m[0][0]);
             
-        }      
-              
-        
-        
-        
-  }
-}
+            // loop through bitmapping of current letter
+            for (int r = 0; r < letter_row_sz; r++) {
+                start_col = 11 * d; // start col of next letter
+                                    // 1st letter starts col 0, 2nd starts col 11, 3rd starts col 22, etc.
+                for (int c = 0; c < letter_col_sz; c++) {
+                    letters_concat[r][start_col] = letter.m[r][c]; // insert into letters_concat
+                    start_col++;
+                }
+            }
+        }
 
+        int sr = sizeof(letters_concat)/sizeof(letters_concat[0]);
+        int sc = sizeof(letters_concat[0])/sizeof(letters_concat[0][0]);
+        if (sc > COLS) { // if col size of letters_concat is greater than the col size of matrix
+            sc = COLS;   // reduce to col size of matrix
+        }
+        // fill the banner matrix array with letters
+        for (int r = 0; r < sr; r++) {
+            for (int c = 0; c < sc; c++) {
+                matrix[r][c] = letters_concat[r][c];
+            }
+        }
+        
+        
+        for (int s = 0; s < COLS; s++) {
+            
+            // turn on LEDs of the displays
+            for(int j=0; j<ROWS-1; ++j){
+                OE_Write(1); // OE high 
+                for(int i=0; i<COLS; ++i){  
+                    //R1_Write(!(matrix[j][i])); 
+                    R1_Write((matrix[j][i+s])); 
+                    B1_Write((matrix[j][i+s]));
+                    G1_Write((matrix[j][i+s]));
+                    A_Write(j);
+                    B_Write(j>>1);
+                    C_Write(j>>2); 
+                    D_Write(j>>3);
+                    R2_Write(0); 
+                    B2_Write(0);
+                    G2_Write(0); 
+                    CLK_Write(0);
+                    CLK_Write(1);
+                    CLK_Write(0);
+                } // end of col loop
+                LAT_Write(1);
+                LAT_Write(0);       
+                OE_Write(0);
+                CyDelayUs(300); //decreased to fix flickering
+            } // end of row loop
+            //CyDelayUs(10);
+            R1_Write(0); 
+            B1_Write(0); 
+            G1_Write(0);       
+        }//end of s loop
+        i = 0;
+    }
+}
