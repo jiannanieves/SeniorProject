@@ -15,14 +15,28 @@
 
 // M x N matrix
 #define ROWS 16
-#define COLS 64
-
+#define COLS 192
+#define TEXT_CMD_ID1     0x24
+#define TEXT_CMD_ID2     0x25
+#define COLOR_CMD_ID     0x26
+#define SCROLL_CMD_ID    0x27
+#define ANIMATION_CMD_ID 0x28
+#define CLEAR_CMD_ID     0x29
 
 // Buffer for UART data
-char input[1];
+//char input[1];
+char input[16];
 int i = 0; // index 
 // Store user text
-char text[1];
+//char text[1];
+char text[16];
+
+char text_line_one[16]; // store text on line one
+char text_line_two[16]; // store text on line two
+char color_opt[1];      // store color option
+char scroll_opt[1];     // store scroll option
+char animation_opt[1];  // store animation option
+char clear_screen[1];   // toggle clear screen command
 
 CY_ISR(RxIsr)
 {
@@ -125,6 +139,57 @@ letter2d get_letter_matrix(char c)
     return result;
 }
 
+void parseSerialBytes() {
+    //if (UART_GetRxBufferSize() <= 0) {
+        char cmd_id = input[0];
+        int data_len = (int)input[1];
+        char data[16];
+        //char data[16] = "TEST";
+
+//        for (int i = 0; i < data_len; i++) {
+//            data[i] = (char)input[i + 2];
+//        }
+        
+        strcpy(data, input + 2);
+        data[strlen(data)] = '\0';
+
+        if (cmd_id == TEXT_CMD_ID1) {
+            // strcpy(text_line_one, data);
+            // char input[1] = "A";
+            strcpy(text, data);
+        }
+        else if (cmd_id == TEXT_CMD_ID2) {
+            strcpy(text_line_two, data);
+            char input[1] = "B";
+            strcpy(text, input);
+        }
+        else if (cmd_id == COLOR_CMD_ID) {
+            strcpy(color_opt, data);
+            char input[1] = "C";
+            strcpy(text, input);
+        }
+        else if (cmd_id == SCROLL_CMD_ID) {
+            strcpy(scroll_opt, data);
+            char input[1] = "D";
+            strcpy(text, input);
+        }
+        else if (cmd_id == ANIMATION_CMD_ID) {
+            strcpy(animation_opt, data);
+            char input[1] = "E";
+            strcpy(text, input);
+        }
+        else if (cmd_id == CLEAR_CMD_ID) {
+            strcpy(clear_screen, data);
+            char input[1] = "F";
+            strcpy(text, input);
+        }
+        else {
+            //char input[1] = "G";
+            //strcpy(text, input);
+        }
+    //}
+}
+
 int main(void)
 {
     UART_ClearRxBuffer();
@@ -142,7 +207,8 @@ int main(void)
     
     for(;;)
     {
-        strcpy(text, input); // copy input buffer into text
+        //strcpy(text, input); // copy input buffer into text
+        parseSerialBytes();
         
         // concatenate the letters together into letters_concat
         letter2d letter;
