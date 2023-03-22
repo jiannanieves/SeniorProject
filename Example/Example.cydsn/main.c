@@ -15,7 +15,7 @@
 
 // M x N matrix
 #define ROWS 16
-#define COLS 192
+#define COLS 64 //192
 #define TEXT_CMD_ID1     0x24
 #define TEXT_CMD_ID2     0x25
 #define COLOR_CMD_ID     0x26
@@ -24,11 +24,9 @@
 #define CLEAR_CMD_ID     0x29
 
 // Buffer for UART data
-//char input[1];
 char input[16];
-int i = 0; // index 
+int i = 0; // index of buffer
 // Store user text
-//char text[1];
 char text[16];
 
 char text_line_one[16]; // store text on line one
@@ -37,6 +35,8 @@ char color_opt[1];      // store color option
 char scroll_opt[1];     // store scroll option
 char animation_opt[1];  // store animation option
 char clear_screen[1];   // toggle clear screen command
+
+void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s);
 
 CY_ISR(RxIsr)
 {
@@ -140,35 +140,44 @@ letter2d get_letter_matrix(char c)
 }
 
 void parseSerialBytes() {
-    // TODO: clear text here ?
-    //if (UART_GetRxBufferSize() <= 0) {
-    char cmd_id = input[0];
-    int data_len = (int)input[1];
-    char data[data_len];
-    
-    strcpy(data, input + 2);
-    data[strlen(data)] = '\0';
-
-    if (cmd_id == TEXT_CMD_ID1) {
-        strcpy(text_line_one, data);
-    }
-    else if (cmd_id == TEXT_CMD_ID2) {
-        strcpy(text_line_two, data);
-    }
-    else if (cmd_id == COLOR_CMD_ID) {
-        strcpy(color_opt, data);
-    }
-    else if (cmd_id == SCROLL_CMD_ID) {
-        strcpy(scroll_opt, data);
-    }
-    else if (cmd_id == ANIMATION_CMD_ID) {
-        strcpy(animation_opt, data);
-    }
-    else if (cmd_id == CLEAR_CMD_ID) {
-        strcpy(clear_screen, data);
-    }
-    else {
+    if (UART_GetRxBufferSize() == 0) {
+        char cmd_id = input[0];       // store 1st byte of input buffer as command ID
+        int data_len = (int)input[1]; // store 2nd byte of input buffer as length of data
+        char data[data_len];          // create data array
         
+        // copy input buffer from index 2 into data array
+        strcpy(data, input + 2);
+        data[strlen(data)] = '\0'; // add null terminator
+        
+        // changing text line one
+        if (cmd_id == TEXT_CMD_ID1) {
+            // TODO: clear text_line_one here?
+            strcpy(text_line_one, data);
+        }
+        // changing text line two
+        else if (cmd_id == TEXT_CMD_ID2) {
+            strcpy(text_line_two, data);
+        }
+        // changing color of text
+        else if (cmd_id == COLOR_CMD_ID) {
+            strcpy(color_opt, data);
+        } 
+        // changing scroll speed of text
+        else if (cmd_id == SCROLL_CMD_ID) {
+            strcpy(scroll_opt, data);
+        }
+        // changing animations
+        else if (cmd_id == ANIMATION_CMD_ID) {
+            strcpy(animation_opt, data);
+        }
+        // clearing screen
+        else if (cmd_id == CLEAR_CMD_ID) {
+            strcpy(clear_screen, data);
+        }
+        // command ID not recognized
+        else {
+            
+        }
     }
 }
 
@@ -179,9 +188,7 @@ int main(void)
     rx_isr_ClearPending();
     rx_isr_StartEx(RxIsr);
     UART_Start();
-    
-    int matrix[ROWS][COLS] = { 0 };
-    
+     
     CyGlobalIntEnable; /* Enable global interrupts. */
 
     CLK_Write(0);
@@ -189,8 +196,11 @@ int main(void)
     
     for(;;)
     {
-        //strcpy(text, input); // copy input buffer into text
+        // parse serial commands
         parseSerialBytes();
+        
+        // matrix to display pixels
+        int matrix[ROWS][COLS] = { 0 };
         
         // concatenate the letters together into letters_concat
         letter2d letter;
@@ -226,33 +236,70 @@ int main(void)
             }
         }
         
-        // turn on LEDs of the displays
-        for(int j=0; j<ROWS; ++j){
-            OE_Write(1); // OE high 
-            for(int i=0; i<COLS; ++i){         
-                R1_Write((matrix[j][i])); 
-                B1_Write((matrix[j][i]));
-                G1_Write((matrix[j][i]));
-                A_Write(j);
-                B_Write(j>>1);
-                C_Write(j>>2); 
-                D_Write(j>>3);
-                R2_Write(0); 
-                B2_Write(0);
-                G2_Write(0); 
-                CLK_Write(0);
-                CLK_Write(1);
-                CLK_Write(0);
-            } // end of col loop
-            LAT_Write(1);
-            LAT_Write(0);       
-            OE_Write(0);
-            CyDelayUs(300);
-        } // end of row loop
+        int s = 0;
+        //for (int s = 0; s < COLS; s++) {
+            // turn on LEDs of the displays
+            for(int j=0; j<ROWS; ++j){
+                OE_Write(1); // OE high 
+                for(int i=0; i<COLS; ++i){         
+                    set_LED_color(matrix, j, i, s);
+                    A_Write(j);
+                    B_Write(j>>1);
+                    C_Write(j>>2); 
+                    D_Write(j>>3);
+                    R2_Write(0); 
+                    B2_Write(0);
+                    G2_Write(0); 
+                    CLK_Write(0);
+                    CLK_Write(1);
+                    CLK_Write(0);
+                } // end of col loop
+                LAT_Write(1);
+                LAT_Write(0);       
+                OE_Write(0);
+                CyDelayUs(300);
+            } // end of row loop
+            //R1_Write(0); 
+            //B1_Write(0); 
+            //G1_Write(0);
+        //} // end of s loop
         
         i = 0;
     
     
-    
+
     }
 }
+
+void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s) {
+    switch (color_opt[0]) {
+        case 'R': // red
+            R1_Write((matrix[j][i+s])); 
+            break;
+        case 'Y': // yellow
+            R1_Write((matrix[j][i+s])); 
+            G1_Write((matrix[j][i+s]));
+            break;
+        case 'G': // green
+            G1_Write((matrix[j][i+s]));
+            break;
+        case 'C': // cyan
+            B1_Write((matrix[j][i+s]));
+            G1_Write((matrix[j][i+s]));
+            break;
+        case 'B': // blue
+            B1_Write((matrix[j][i+s]));
+            break;
+        case 'P': // purple 
+            B1_Write((matrix[j][i+s]));
+            R1_Write((matrix[j][i+s]));
+            break;
+        case 'W': // white
+        default: 
+            R1_Write((matrix[j][i+s])); 
+            B1_Write((matrix[j][i+s]));
+            G1_Write((matrix[j][i+s]));
+            break;
+    }
+}
+
