@@ -140,54 +140,36 @@ letter2d get_letter_matrix(char c)
 }
 
 void parseSerialBytes() {
+    // TODO: clear text here ?
     //if (UART_GetRxBufferSize() <= 0) {
-        char cmd_id = input[0];
-        int data_len = (int)input[1];
-        char data[16];
-        //char data[16] = "TEST";
+    char cmd_id = input[0];
+    int data_len = (int)input[1];
+    char data[data_len];
+    
+    strcpy(data, input + 2);
+    data[strlen(data)] = '\0';
 
-//        for (int i = 0; i < data_len; i++) {
-//            data[i] = (char)input[i + 2];
-//        }
+    if (cmd_id == TEXT_CMD_ID1) {
+        strcpy(text_line_one, data);
+    }
+    else if (cmd_id == TEXT_CMD_ID2) {
+        strcpy(text_line_two, data);
+    }
+    else if (cmd_id == COLOR_CMD_ID) {
+        strcpy(color_opt, data);
+    }
+    else if (cmd_id == SCROLL_CMD_ID) {
+        strcpy(scroll_opt, data);
+    }
+    else if (cmd_id == ANIMATION_CMD_ID) {
+        strcpy(animation_opt, data);
+    }
+    else if (cmd_id == CLEAR_CMD_ID) {
+        strcpy(clear_screen, data);
+    }
+    else {
         
-        strcpy(data, input + 2);
-        data[strlen(data)] = '\0';
-
-        if (cmd_id == TEXT_CMD_ID1) {
-            // strcpy(text_line_one, data);
-            // char input[1] = "A";
-            strcpy(text, data);
-        }
-        else if (cmd_id == TEXT_CMD_ID2) {
-            strcpy(text_line_two, data);
-            char input[1] = "B";
-            strcpy(text, input);
-        }
-        else if (cmd_id == COLOR_CMD_ID) {
-            strcpy(color_opt, data);
-            char input[1] = "C";
-            strcpy(text, input);
-        }
-        else if (cmd_id == SCROLL_CMD_ID) {
-            strcpy(scroll_opt, data);
-            char input[1] = "D";
-            strcpy(text, input);
-        }
-        else if (cmd_id == ANIMATION_CMD_ID) {
-            strcpy(animation_opt, data);
-            char input[1] = "E";
-            strcpy(text, input);
-        }
-        else if (cmd_id == CLEAR_CMD_ID) {
-            strcpy(clear_screen, data);
-            char input[1] = "F";
-            strcpy(text, input);
-        }
-        else {
-            //char input[1] = "G";
-            //strcpy(text, input);
-        }
-    //}
+    }
 }
 
 int main(void)
@@ -212,12 +194,12 @@ int main(void)
         
         // concatenate the letters together into letters_concat
         letter2d letter;
-        int letters_concat[15][sizeof text * 11] = { 0 };
+        int letters_concat[15][sizeof text_line_one * 11] = { 0 };
         int start_col;
         int letter_row_sz;
         int letter_col_sz;
-        for (int d = 0; d < (int)sizeof text; d++) {
-            letter = get_letter_matrix(text[d]); // get letter bitmapping for the current character
+        for (int d = 0; d < (int)sizeof text_line_one; d++) {
+            letter = get_letter_matrix(text_line_one[d]); // get letter bitmapping for the current character
             letter_row_sz = sizeof(letter.m)/sizeof(letter.m[0]);
             letter_col_sz = sizeof(letter.m[0])/sizeof(letter.m[0][0]);
             
