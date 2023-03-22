@@ -1,4 +1,4 @@
-* ========================================
+/* ========================================
  *
  * Copyright YOUR COMPANY, THE YEAR
  * All Rights Reserved
@@ -17,6 +17,19 @@
 #define ROWS 16
 #define COLS 192 
 
+#define COLS 192
+#define TEXT_CMD_ID1     0x24
+#define TEXT_CMD_ID2     0x25
+#define COLOR_CMD_ID     0x26
+#define SCROLL_CMD_ID    0x27
+#define ANIMATION_CMD_ID 0x28
+#define CLEAR_CMD_ID     0x29
+
+//timer?
+#define ON 0
+#define OFF 1
+#define TIMER_CLOCK 24000000
+
 uint8 timer_flag = 0;
 void ms_delay (uint32 ms);
 
@@ -25,6 +38,15 @@ char input[16];             //change to 18 maybe?
 int i = 0; // index 
 // Store user text          //change to 18 maybe?
 char text[16];
+
+char text_line_one[16]; // store text on line one
+char text_line_two[16]; // store text on line two
+char color_opt[1];      // store color option
+char scroll_opt[1];     // store scroll option
+char animation_opt[1];  // store animation option
+char clear_screen[1];   // toggle clear screen command
+
+uint16 ms_count = 0; //timer?
 
 CY_ISR(RxIsr)
 {
@@ -35,6 +57,12 @@ CY_ISR(RxIsr)
         i++;
     }
 }
+
+CY_ISR(MY_ISR) {
+    timer_flag = 1;
+}
+
+void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s);
 
 letter2d get_letter_matrix(char c) {
     letter2d result;
@@ -124,6 +152,38 @@ letter2d get_letter_matrix(char c) {
             break;
     }
     return result;
+}
+
+
+void parseSerialBytes() {
+    //if (UART_GetRxBufferSize() <= 0) {
+        char cmd_id = input[0];
+        int data_len = (int)input[1];
+        char data[data_len];
+
+        strcpy(data, input + 2);
+        data[strlen(data)] = '\0';
+
+        if (cmd_id == TEXT_CMD_ID1) {
+            strcpy(text_line_one, data);
+        }
+        else if (cmd_id == TEXT_CMD_ID2) {
+            strcpy(text_line_two, data);
+        }
+        else if (cmd_id == COLOR_CMD_ID) {
+            strcpy(color_opt, data);
+        }
+        else if (cmd_id == SCROLL_CMD_ID) {
+            strcpy(scroll_opt, data);
+        }
+        else if (cmd_id == ANIMATION_CMD_ID) {
+            strcpy(animation_opt, data);
+        }
+        else if (cmd_id == CLEAR_CMD_ID) {
+            strcpy(clear_screen, data);
+        }
+        else {
+        }
 }
 
 // Buffer for UART data
@@ -233,8 +293,11 @@ letter2d get_letter_matrix(char c)
     return result;
 }
 
+
 int main(void)
 {
+    //char color = 'w'; // test color
+    
     UART_ClearRxBuffer();
     UART_ClearTxBuffer();
     rx_isr_ClearPending();
@@ -242,6 +305,9 @@ int main(void)
     UART_Start();
     
     int matrix[ROWS][COLS] = { 0 };
+    
+   Timer_Init(); //configurate timer
+   isr_1_StartEx(MY_ISR); //setup timer interrupt sub-routine
     
     CyGlobalIntEnable; /* Enable global interrupts. */
 
@@ -251,16 +317,18 @@ int main(void)
     for(;;)
     {
 
-        strcpy(text, input); // copy input buffer into text
         
+        //strcpy(text, input); // copy input buffer into text
+        parseSerialBytes();
+      
         // concatenate the letters together into letters_concat
         letter2d letter;
-        int letters_concat[15][sizeof text * 11] = { 0 };
+        int letters_concat[15][sizeof text_line_one * 11] = { 0 };
         int start_col;
         int letter_row_sz;
         int letter_col_sz;
-        for (int d = 0; d < (int)sizeof text; d++) {
-            letter = get_letter_matrix(text[d]); // get letter bitmapping for the current character
+        for (int d = 0; d < (int)sizeof text_line_one; d++) {
+            letter = get_letter_matrix(text_line_one[d]); // get letter bitmapping for the current character
             letter_row_sz = sizeof(letter.m)/sizeof(letter.m[0]);
             letter_col_sz = sizeof(letter.m[0])/sizeof(letter.m[0][0]);
             
@@ -289,16 +357,17 @@ int main(void)
         
 
         
+        
         for (int s = 0; s < COLS; s++) {
+        //int s = 0;
+        //ms_delay(500); //delay half second
             
             // turn on LEDs of the displays
             for(int j=0; j<ROWS-1; ++j){
                 OE_Write(1); // OE high 
                 for(int i=0; i<COLS; ++i){  
-                    //R1_Write(!(matrix[j][i])); 
-                    R1_Write((matrix[j][i+s])); 
-                    B1_Write((matrix[j][i+s]));
-                    G1_Write((matrix[j][i+s]));
+                    //get color for top half
+                    set_LED_color(matrix, j, i, s);
                     A_Write(j);
                     B_Write(j>>1);
                     C_Write(j>>2); 
@@ -322,5 +391,47 @@ int main(void)
         }//end of s loop
         i = 0;
 
+    }
+}
+//make timer which is in ISR which sets it to do something
+
+void ms_delay (uint32 ms) {
+    uint32 period = TIMER_CLOCK/1000*ms;
+    Timer_WritePeriod(period);
+    Timer_Enable(); // start the timeout counter
+    while(!timer_flag);
+    Timer_Stop();
+    timer_flag = 0;
+}
+
+void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s) {
+    switch (color_opt[0]) {
+        case 'R': // red
+            R1_Write((matrix[j][i+s])); 
+            break;
+        case 'Y': // yellow
+            R1_Write((matrix[j][i+s])); 
+            G1_Write((matrix[j][i+s]));
+            break;
+        case 'G': // green
+            G1_Write((matrix[j][i+s]));
+            break;
+        case 'C': // cyan
+            B1_Write((matrix[j][i+s]));
+            G1_Write((matrix[j][i+s]));
+            break;
+        case 'B': // blue
+            B1_Write((matrix[j][i+s]));
+            break;
+        case 'P': // purple 
+            B1_Write((matrix[j][i+s]));
+            R1_Write((matrix[j][i+s]));
+            break;
+        case 'W': // white
+        default: 
+            R1_Write((matrix[j][i+s])); 
+            B1_Write((matrix[j][i+s]));
+            G1_Write((matrix[j][i+s]));
+            break;
     }
 }
