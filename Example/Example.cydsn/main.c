@@ -47,7 +47,7 @@ CY_ISR(RxIsr)
         i++;
     }
 }
-
+void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s);
 letter2d get_letter_matrix(char c) 
 {
     letter2d result;
