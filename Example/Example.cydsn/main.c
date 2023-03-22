@@ -15,9 +15,7 @@
 
 // M x N matrix
 #define ROWS 16
-#define COLS 192 
-
-#define COLS 192
+#define COLS 64 //192
 #define TEXT_CMD_ID1     0x24
 #define TEXT_CMD_ID2     0x25
 #define COLOR_CMD_ID     0x26
@@ -25,18 +23,10 @@
 #define ANIMATION_CMD_ID 0x28
 #define CLEAR_CMD_ID     0x29
 
-//timer?
-#define ON 0
-#define OFF 1
-#define TIMER_CLOCK 24000000
-
-uint8 timer_flag = 0;
-void ms_delay (uint32 ms);
-
 // Buffer for UART data
-char input[16];             //change to 18 maybe?
-int i = 0; // index 
-// Store user text          //change to 18 maybe?
+char input[16];
+int i = 0; // index of buffer
+// Store user text
 char text[16];
 
 char text_line_one[16]; // store text on line one
@@ -46,151 +36,7 @@ char scroll_opt[1];     // store scroll option
 char animation_opt[1];  // store animation option
 char clear_screen[1];   // toggle clear screen command
 
-uint16 ms_count = 0; //timer?
-
-CY_ISR(RxIsr)
-{
-    rx_isr_ClearPending();
-    while (UART_GetRxBufferSize() > 0) 
-    {
-        input[i] = UART_GetByte();
-        i++;
-    }
-}
-
-CY_ISR(MY_ISR) {
-    timer_flag = 1;
-}
-
 void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s);
-
-letter2d get_letter_matrix(char c) {
-    letter2d result;
-    int empty[15][11] = { 0 };
-    switch (c) {
-        case 'A':
-            memcpy(result.m, A, sizeof(A));
-            return result;
-            break;
-        case 'B':
-            memcpy(result.m, B, sizeof(B));
-            break;
-        case 'C':
-            memcpy(result.m, C, sizeof(C));
-            break;
-        case 'D':
-            memcpy(result.m, D, sizeof(D));
-            break;
-        case 'E':
-            memcpy(result.m, E, sizeof(E));
-            break;
-        case 'F':
-            memcpy(result.m, F, sizeof(F));
-            break;
-        case 'G':
-            memcpy(result.m, G, sizeof(G));
-            break;
-        case 'H':
-            memcpy(result.m, H, sizeof(H));
-            break;
-        case 'I':
-            memcpy(result.m, I, sizeof(I));
-            break;
-        case 'J':
-            memcpy(result.m, J, sizeof(J));
-            break;
-        case 'K':
-            memcpy(result.m, K, sizeof(K));
-            break;
-        case 'L':
-            memcpy(result.m, L, sizeof(L));
-            break;
-        case 'M':
-            memcpy(result.m, M, sizeof(M));
-            break;
-        case 'N':
-            memcpy(result.m, N, sizeof(N));
-            break;
-        case 'O':
-            memcpy(result.m, O, sizeof(O));
-            break;
-        case 'P':
-            memcpy(result.m, P, sizeof(P));
-            break;
-        case 'Q':
-            memcpy(result.m, Q, sizeof(Q));
-            break;
-        case 'R':
-            memcpy(result.m, R, sizeof(R));
-            break;
-        case 'S':
-            memcpy(result.m, S, sizeof(S));
-            break;
-        case 'T':
-            memcpy(result.m, T, sizeof(T));
-            break;
-        case 'U':
-            memcpy(result.m, U, sizeof(U));
-            break;
-        case 'V':
-            memcpy(result.m, V, sizeof(V));
-            break;
-        case 'W':
-            memcpy(result.m, W, sizeof(W));
-            break;
-        case 'X':
-            memcpy(result.m, X, sizeof(X));
-            break;
-        case 'Y':
-            memcpy(result.m, Y, sizeof(Y));
-            break;
-        case 'Z':
-            memcpy(result.m, Z, sizeof(Z));
-            break;
-        default:
-            memcpy(result.m, empty, sizeof(empty));
-            break;
-    }
-    return result;
-}
-
-
-void parseSerialBytes() {
-    //if (UART_GetRxBufferSize() <= 0) {
-        char cmd_id = input[0];
-        int data_len = (int)input[1];
-        char data[data_len];
-
-        strcpy(data, input + 2);
-        data[strlen(data)] = '\0';
-
-        if (cmd_id == TEXT_CMD_ID1) {
-            strcpy(text_line_one, data);
-        }
-        else if (cmd_id == TEXT_CMD_ID2) {
-            strcpy(text_line_two, data);
-        }
-        else if (cmd_id == COLOR_CMD_ID) {
-            strcpy(color_opt, data);
-        }
-        else if (cmd_id == SCROLL_CMD_ID) {
-            strcpy(scroll_opt, data);
-        }
-        else if (cmd_id == ANIMATION_CMD_ID) {
-            strcpy(animation_opt, data);
-        }
-        else if (cmd_id == CLEAR_CMD_ID) {
-            strcpy(clear_screen, data);
-        }
-        else {
-        }
-}
-
-// Buffer for UART data
-char input[17];
-int i = 0; // index 
-// Store user text
-char text[17];
 
 CY_ISR(RxIsr)
 {
@@ -293,6 +139,47 @@ letter2d get_letter_matrix(char c)
     return result;
 }
 
+void parseSerialBytes() {
+    if (UART_GetRxBufferSize() == 0) {
+        char cmd_id = input[0];       // store 1st byte of input buffer as command ID
+        int data_len = (int)input[1]; // store 2nd byte of input buffer as length of data
+        char data[data_len];          // create data array
+        
+        // copy input buffer from index 2 into data array
+        strcpy(data, input + 2);
+        data[strlen(data)] = '\0'; // add null terminator
+        
+        // changing text line one
+        if (cmd_id == TEXT_CMD_ID1) {
+            // TODO: clear text_line_one here?
+            strcpy(text_line_one, data);
+        }
+        // changing text line two
+        else if (cmd_id == TEXT_CMD_ID2) {
+            strcpy(text_line_two, data);
+        }
+        // changing color of text
+        else if (cmd_id == COLOR_CMD_ID) {
+            strcpy(color_opt, data);
+        } 
+        // changing scroll speed of text
+        else if (cmd_id == SCROLL_CMD_ID) {
+            strcpy(scroll_opt, data);
+        }
+        // changing animations
+        else if (cmd_id == ANIMATION_CMD_ID) {
+            strcpy(animation_opt, data);
+        }
+        // clearing screen
+        else if (cmd_id == CLEAR_CMD_ID) {
+            strcpy(clear_screen, data);
+        }
+        // command ID not recognized
+        else {
+            
+        }
+    }
+}
 
 int main(void)
 {
@@ -303,12 +190,7 @@ int main(void)
     rx_isr_ClearPending();
     rx_isr_StartEx(RxIsr);
     UART_Start();
-    
-    int matrix[ROWS][COLS] = { 0 };
-    
-   Timer_Init(); //configurate timer
-   isr_1_StartEx(MY_ISR); //setup timer interrupt sub-routine
-    
+     
     CyGlobalIntEnable; /* Enable global interrupts. */
 
     CLK_Write(0);
@@ -316,7 +198,11 @@ int main(void)
     
     for(;;)
     {
-
+        // parse serial commands
+        parseSerialBytes();
+        
+        // matrix to display pixels
+        int matrix[ROWS][COLS] = { 0 };
         
         //strcpy(text, input); // copy input buffer into text
         parseSerialBytes();
@@ -390,18 +276,10 @@ int main(void)
             G1_Write(0);       
         }//end of s loop
         i = 0;
+    
+    
 
     }
-}
-//make timer which is in ISR which sets it to do something
-
-void ms_delay (uint32 ms) {
-    uint32 period = TIMER_CLOCK/1000*ms;
-    Timer_WritePeriod(period);
-    Timer_Enable(); // start the timeout counter
-    while(!timer_flag);
-    Timer_Stop();
-    timer_flag = 0;
 }
 
 void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s) {
@@ -435,3 +313,4 @@ void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s) {
             break;
     }
 }
+
