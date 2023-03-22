@@ -183,6 +183,8 @@ void parseSerialBytes() {
 
 int main(void)
 {
+    //char color = 'w'; // test color
+    
     UART_ClearRxBuffer();
     UART_ClearTxBuffer();
     rx_isr_ClearPending();
@@ -202,6 +204,9 @@ int main(void)
         // matrix to display pixels
         int matrix[ROWS][COLS] = { 0 };
         
+        //strcpy(text, input); // copy input buffer into text
+        parseSerialBytes();
+      
         // concatenate the letters together into letters_concat
         letter2d letter;
         int letters_concat[15][sizeof text_line_one * 11] = { 0 };
@@ -236,12 +241,18 @@ int main(void)
             }
         }
         
-        int s = 0;
-        //for (int s = 0; s < COLS; s++) {
+
+        
+        
+        for (int s = 0; s < COLS; s++) {
+        //int s = 0;
+        //ms_delay(500); //delay half second
+            
             // turn on LEDs of the displays
-            for(int j=0; j<ROWS; ++j){
+            for(int j=0; j<ROWS-1; ++j){
                 OE_Write(1); // OE high 
-                for(int i=0; i<COLS; ++i){         
+                for(int i=0; i<COLS; ++i){  
+                    //get color for top half
                     set_LED_color(matrix, j, i, s);
                     A_Write(j);
                     B_Write(j>>1);
@@ -257,13 +268,13 @@ int main(void)
                 LAT_Write(1);
                 LAT_Write(0);       
                 OE_Write(0);
-                CyDelayUs(300);
+                CyDelayUs(300); //decreased to fix flickering
             } // end of row loop
-            //R1_Write(0); 
-            //B1_Write(0); 
-            //G1_Write(0);
-        //} // end of s loop
-        
+            //CyDelayUs(10);
+            R1_Write(0); 
+            B1_Write(0); 
+            G1_Write(0);       
+        }//end of s loop
         i = 0;
     
     
