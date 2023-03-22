@@ -15,7 +15,7 @@
 
 // M x N matrix
 #define ROWS 16
-#define COLS 192 // 64
+#define COLS 192 
 
 #define COLS 192
 #define TEXT_CMD_ID1     0x24
@@ -154,6 +154,7 @@ letter2d get_letter_matrix(char c) {
     return result;
 }
 
+
 void parseSerialBytes() {
     //if (UART_GetRxBufferSize() <= 0) {
         char cmd_id = input[0];
@@ -185,6 +186,113 @@ void parseSerialBytes() {
         }
 }
 
+// Buffer for UART data
+char input[17];
+int i = 0; // index 
+// Store user text
+char text[17];
+
+CY_ISR(RxIsr)
+{
+    rx_isr_ClearPending();
+    while (UART_GetRxBufferSize() > 0) 
+    {
+        input[i] = UART_GetByte();
+        i++;
+    }
+}
+
+letter2d get_letter_matrix(char c) 
+{
+    letter2d result;
+    int empty[15][11] = { 0 };
+    switch (c) {
+        case 'A':
+            memcpy(result.m, A, sizeof(A));
+            return result;
+            break;
+        case 'B':
+            memcpy(result.m, B, sizeof(B));
+            break;
+        case 'C':
+            memcpy(result.m, C, sizeof(C));
+            break;
+        case 'D':
+            memcpy(result.m, D, sizeof(D));
+            break;
+        case 'E':
+            memcpy(result.m, E, sizeof(E));
+            break;
+        case 'F':
+            memcpy(result.m, F, sizeof(F));
+            break;
+        case 'G':
+            memcpy(result.m, G, sizeof(G));
+            break;
+        case 'H':
+            memcpy(result.m, H, sizeof(H));
+            break;
+        case 'I':
+            memcpy(result.m, I, sizeof(I));
+            break;
+        case 'J':
+            memcpy(result.m, J, sizeof(J));
+            break;
+        case 'K':
+            memcpy(result.m, K, sizeof(K));
+            break;
+        case 'L':
+            memcpy(result.m, L, sizeof(L));
+            break;
+        case 'M':
+            memcpy(result.m, M, sizeof(M));
+            break;
+        case 'N':
+            memcpy(result.m, N, sizeof(N));
+            break;
+        case 'O':
+            memcpy(result.m, O, sizeof(O));
+            break;
+        case 'P':
+            memcpy(result.m, P, sizeof(P));
+            break;
+        case 'Q':
+            memcpy(result.m, Q, sizeof(Q));
+            break;
+        case 'R':
+            memcpy(result.m, R, sizeof(R));
+            break;
+        case 'S':
+            memcpy(result.m, S, sizeof(S));
+            break;
+        case 'T':
+            memcpy(result.m, T, sizeof(T));
+            break;
+        case 'U':
+            memcpy(result.m, U, sizeof(U));
+            break;
+        case 'V':
+            memcpy(result.m, V, sizeof(V));
+            break;
+        case 'W':
+            memcpy(result.m, W, sizeof(W));
+            break;
+        case 'X':
+            memcpy(result.m, X, sizeof(X));
+            break;
+        case 'Y':
+            memcpy(result.m, Y, sizeof(Y));
+            break;
+        case 'Z':
+            memcpy(result.m, Z, sizeof(Z));
+            break;
+        default:
+            memcpy(result.m, empty, sizeof(empty));
+            break;
+    }
+    return result;
+}
+
 
 int main(void)
 {
@@ -208,10 +316,11 @@ int main(void)
     
     for(;;)
     {
+
         
         //strcpy(text, input); // copy input buffer into text
         parseSerialBytes();
-        
+      
         // concatenate the letters together into letters_concat
         letter2d letter;
         int letters_concat[15][sizeof text_line_one * 11] = { 0 };
@@ -246,6 +355,7 @@ int main(void)
             }
         }
         
+
         
         
         for (int s = 0; s < COLS; s++) {
@@ -280,6 +390,7 @@ int main(void)
             G1_Write(0);       
         }//end of s loop
         i = 0;
+
     }
 }
 //make timer which is in ISR which sets it to do something
