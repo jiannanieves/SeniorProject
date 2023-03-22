@@ -22,7 +22,7 @@ using namespace std;
 
 const string colorOpt[] = {"WHITE","RED","GREEN","BLUE","YELLOW","CYAN","PURPLE"};
 const int colorHexVal[] = {0x57, 0x52, 0x47, 0x42, 0x59, 0x43, 0x50};
-const string scrollOpt[] = {"OPTION 1","OPTION 2", "OPTION 3"};
+const string scrollOpt[] = {"NO SCROLL","SLOW", "FAST"};
 const int scrollHexVal[] = {0x01, 0x02, 0x03};
 const string animationOpt[] = {"OPTION 1","OPTION 2", "OPTION 3"};
 const int animationHexVal[] = {0x01, 0x02, 0x03};
