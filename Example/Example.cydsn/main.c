@@ -111,13 +111,10 @@ int main(void)
         
         // matrix to display pixels
         int matrix[ROWS][COLS] = { 0 };
-        
-        //strcpy(text, input); // copy input buffer into text
-        parseSerialBytes();
       
         // concatenate the letters together into letters_concat
         letter2d letter;
-        int letters_concat[15][sizeof text_line_one * 11] = { 0 };
+        int letters_concat[16][sizeof text_line_one * 11] = { 0 };
         int start_col;
         int letter_row_sz;
         int letter_col_sz;
@@ -149,43 +146,50 @@ int main(void)
             }
         }
         
-        //for (int s = 0; s < COLS; s++) {
-        int s = 0;
-        //ms_delay(500); //delay half second
+        int rows_tot;
+        for (int s = 0; s < COLS; s++) {
+            if (scroll_opt[0] == 0x01) {
+                rows_tot = ROWS + 1;
+            }
+            else {
+                rows_tot = ROWS;
+            }
             
             // turn on LEDs of the displays
-            for(int j=0; j<ROWS; ++j){
+            // scrolling needs ROWS-1, stationary needs just ROWS
+            for(int j=0; j<(rows_tot-1); ++j){ 
                 OE_Write(1); // OE high 
                 for(int i=0; i<COLS; ++i){  
-                    //get color for top half
-                    set_LED_color(matrix, j, i, s);
+                    // get color for top half
+                    if (scroll_opt[0] == 0x01) {
+                        set_LED_color(matrix, j, i, 0);
+                    }
+                    else {
+                        set_LED_color(matrix, j, i, s);
+                    }
                     A_Write(j);
                     B_Write(j>>1);
                     C_Write(j>>2); 
                     D_Write(j>>3);
                     R2_Write(0); 
                     B2_Write(0);
-                    G2_Write(0); 
-                    CLK_Write(0);
+                    G2_Write(0);
                     CLK_Write(1);
-                    // delay
+                    //CyDelayUs(1);
                     CLK_Write(0);
                 } // end of col loop
                 LAT_Write(1);
-                // delay
+                //CyDelayUs(1);
                 LAT_Write(0);       
                 OE_Write(0);
-                CyDelayUs(300); //decreased to fix flickering
+                CyDelayUs(200); // BRIGHTNESS
+                 //delay half second
             } // end of row loop
-            //CyDelayUs(10);
-            //R1_Write(0); 
-            //B1_Write(0); 
-            //G1_Write(0);       
-        //}//end of s loop
+            R1_Write(0); 
+            B1_Write(0); 
+            G1_Write(0);
+        } // end of s loop
         i = 0;
-    
-    
-
     }
 }
 
