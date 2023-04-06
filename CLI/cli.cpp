@@ -280,13 +280,11 @@ char* formatSerialBytes(string command, string data, int *num_bytes) {
     // data       - {lengthData} bytes
     char *bytes_to_send = new char[2 + data.length()];
     *num_bytes = 2 + data.length();
-    printf("bytes to send len: %d\n", 2 + data.length());
 
     // Remove newline character from data
     if (!data.empty() && data[data.length() - 1] == '\n') {
         data = data.substr(0, data.length() - 1);
     }
-    printf("data len: %d\n", data.length());
 
     // format serial command to change display text line 2
     if (command == "text_line_1") {
@@ -337,8 +335,8 @@ char* formatSerialBytes(string command, string data, int *num_bytes) {
 
 int sendSerialBytes(char *bytes_to_send, int num_bytes) {
     // Declare variables and structures
-    int numBytes = num_bytes;//sizeof(bytes_to_send);
-    printf("num bytes: %d\n", numBytes);
+    int numBytes = num_bytes;
+
     HANDLE hSerial;
     DCB dcbSerialParams = {0};
     COMMTIMEOUTS timeouts = {0};
