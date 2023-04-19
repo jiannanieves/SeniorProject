@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include "project.h"
 #include "letters.h"
+#include <stdbool.h> // for boolean
 
 // M x N matrix
 #define ROWS 16
@@ -32,11 +33,16 @@ char color_opt[1];      // store color option
 char scroll_opt[1];     // store scroll option
 char animation_opt[1];  // store animation option
 char clear_screen[1];   // toggle clear screen command
+bool flash;
 
 void write_static_matrix (int matrix[ROWS][COLS]);
 void write_scroll_matrix (int matrix[ROWS][COLS]);
 void write_top_half (int matrix[ROWS][COLS], int j, int i, int s);
 void write_bottom_half (int matrix[ROWS][COLS], int j, int i, int s);
+void set_animation1_top (int matrix[ROWS][COLS], int j, int i, int s);
+void set_animation2_top (int matrix[ROWS][COLS], int j, int i, int s);
+void set_animation1_bottom (int matrix[ROWS][COLS], int j, int i, int s);
+void set_animation2_bottom (int matrix[ROWS][COLS], int j, int i, int s);
 letter2d get_letter_matrix (char c);
 
 CY_ISR(RxIsr)
@@ -166,39 +172,8 @@ int main(void)
 }
 
 void write_static_matrix(int matrix[ROWS][COLS]) {
-    for(int j=0; j<ROWS; ++j){ 
-        OE_Write(1); // OE high 
-        A_Write(j);
-        B_Write(j>>1);
-        C_Write(j>>2); 
-        D_Write(j>>3);
-        for(int i=0; i<COLS; ++i){
-            if (which_line == 1) {
-                write_top_half(matrix, j, i, 0); // write pixels to top half
-            }
-            else if (which_line == 2) {
-                write_bottom_half(matrix, j, i, 0); // write pixels to bottom half
-            }
-            CLK_Write(1);
-            //CyDelayUs(1);
-            CLK_Write(0);
-        }
-        LAT_Write(1);
-        //CyDelayUs(1);
-        LAT_Write(0);       
-        OE_Write(0);
-        CyDelayUs(300); // BRIGHTNESS
-    }
-    R1_Write(0); 
-    B1_Write(0); 
-    G1_Write(0);
-    R2_Write(0); 
-    B2_Write(0); 
-    G2_Write(0);
-}
-
-void write_scroll_matrix (int matrix[ROWS][COLS]) {
-    for(int s = 0; s<COLS; ++s) {
+    // note: this for loop reduces the flickering
+    for (int s = 0; s < COLS; s++) { 
         for(int j=0; j<ROWS; ++j){ 
             OE_Write(1); // OE high 
             A_Write(j);
@@ -207,19 +182,25 @@ void write_scroll_matrix (int matrix[ROWS][COLS]) {
             D_Write(j>>3);
             for(int i=0; i<COLS; ++i){
                 if (which_line == 1) {
-                    if(i+s >= COLS) {
-                        write_top_half(matrix, j, i, s-COLS); // write pixels to top half
-                    } 
+                    if (animation_opt[0] == 0x02) {
+                        set_animation1_top(matrix, j, i, 0);
+                    }
+                    else if (animation_opt[0] == 0x03) {
+                        set_animation2_top(matrix, j, i, 0);
+                    }
                     else {
-                        write_top_half(matrix, j, i, s); // write pixels to top half
+                        write_top_half(matrix, j, i, 0);    // write pixels to top half
                     }
                 }
                 else if (which_line == 2) {
-                    if(i+s >= COLS) {
-                        write_bottom_half(matrix, j, i, s-COLS); // write pixels to bottom half
-                    } 
+                    if (animation_opt[0] == 0x02) {
+                        set_animation1_bottom(matrix, j, i, 0);
+                    }
+                    else if (animation_opt[0] == 0x03) {
+                        set_animation2_bottom(matrix, j, i, 0);
+                    }
                     else {
-                        write_bottom_half(matrix, j, i, s); // write pixels to bottom half
+                        write_bottom_half(matrix, j, i, 0); // write pixels to bottom half
                     }
                 }
                 CLK_Write(1);
@@ -238,6 +219,136 @@ void write_scroll_matrix (int matrix[ROWS][COLS]) {
         R2_Write(0); 
         B2_Write(0); 
         G2_Write(0);
+    }
+}
+
+void write_scroll_matrix (int matrix[ROWS][COLS]) {
+    for(int s = 0; s<COLS; ++s) {
+        for(int j=0; j<ROWS; ++j){ 
+            OE_Write(1); // OE high 
+            A_Write(j);
+            B_Write(j>>1);
+            C_Write(j>>2); 
+            D_Write(j>>3);
+            for(int i=0; i<COLS; ++i){
+                if (which_line == 1) {
+                    if(i+s >= COLS) {
+                        if (animation_opt[0] == 0x02) {
+                            set_animation1_top(matrix, j, i, s-COLS);
+                        }
+                        else if (animation_opt[0] == 0x03) {
+                            set_animation2_top(matrix, j, i, s-COLS);
+                        }
+                        else {
+                            write_top_half(matrix, j, i, s-COLS);    // write pixels to top half
+                        }
+                    } 
+                    else {
+                        if (animation_opt[0] == 0x02) {
+                            set_animation1_top(matrix, j, i, s);
+                        }
+                        else if (animation_opt[0] == 0x03) {
+                            set_animation2_top(matrix, j, i, s);
+                        }
+                        else {
+                            write_top_half(matrix, j, i, s);    // write pixels to top half
+                        }
+                    }
+                }
+                else if (which_line == 2) {
+                    if(i+s >= COLS) {
+                        if (animation_opt[0] == 0x02) {
+                            set_animation1_bottom(matrix, j, i, s-COLS);
+                        }
+                        else if (animation_opt[0] == 0x03) {
+                            set_animation2_bottom(matrix, j, i, s-COLS);
+                        }
+                        else {
+                            write_bottom_half(matrix, j, i, s-COLS);    // write pixels to bottom half
+                        }
+                    } 
+                    else {
+                        if (animation_opt[0] == 0x02) {
+                            set_animation1_bottom(matrix, j, i, s);
+                        }
+                        else if (animation_opt[0] == 0x03) {
+                            set_animation2_bottom(matrix, j, i, s);
+                        }
+                        else {
+                            write_bottom_half(matrix, j, i, s);    // write pixels to bottom half
+                        }
+                    }
+                }
+                CLK_Write(1);
+                //CyDelayUs(1);
+                CLK_Write(0);
+            }
+            LAT_Write(1);
+            //CyDelayUs(1);
+            LAT_Write(0);       
+            OE_Write(0);
+            CyDelayUs(300); // BRIGHTNESS
+        }
+        R1_Write(0); 
+        B1_Write(0); 
+        G1_Write(0);
+        R2_Write(0); 
+        B2_Write(0); 
+        G2_Write(0);
+    }
+}
+
+void set_animation1_top (int matrix[ROWS][COLS], int j, int i, int s) {
+    if (flash) {
+        R1_Write(0); 
+        B1_Write((matrix[j][i+s]));
+        flash = !flash;
+    }
+    else {
+       R1_Write((matrix[j][i+s]));  
+       B1_Write(0);
+       flash = !flash;
+    }
+}
+
+void set_animation2_top (int matrix[ROWS][COLS], int j, int i, int s) {
+    if (flash) {
+        R1_Write((matrix[j][i+s])); 
+        G1_Write((matrix[j][i+s]));
+        flash = !flash;
+    }
+    else {
+       B1_Write((matrix[j][i+s]));
+       R1_Write(0);
+       G1_Write(0);
+       flash = !flash;
+    }
+}
+
+void set_animation1_bottom (int matrix[ROWS][COLS], int j, int i, int s) {
+    if (flash) {
+        R2_Write(0); 
+        B2_Write((matrix[j][i+s]));
+        flash = !flash;
+    }
+    else {
+       R2_Write((matrix[j][i+s]));  
+       B2_Write(0);
+       flash = !flash;
+    }
+}
+
+void set_animation2_bottom (int matrix[ROWS][COLS], int j, int i, int s) {
+    if (flash) {
+        R2_Write((matrix[j][i+s])); 
+        G2_Write((matrix[j][i+s]));
+        flash = !flash;
+    }
+    else {
+       B2_Write((matrix[j][i+s]));
+       R2_Write(0);
+       G2_Write(0);
+       flash = !flash;
     }
 }
 
