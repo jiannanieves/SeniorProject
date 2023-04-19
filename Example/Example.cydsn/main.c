@@ -25,20 +25,19 @@
 
 char input[16]; // Buffer for UART data
 int i = 0;      // Index of buffer
-char text[16];  // Store user text
 
-char text_line_one[16]; // store text on line one
-char text_line_two[16]; // store text on line two
+int which_line = 1;     // determine which line to write, 1st line default
+char text_line[16];     // store text
 char color_opt[1];      // store color option
 char scroll_opt[1];     // store scroll option
 char animation_opt[1];  // store animation option
 char clear_screen[1];   // toggle clear screen command
 
-void write_static_matrix(int matrix[ROWS][COLS]);
-void write_scroll_matrix(int matrix[ROWS][COLS]);
-void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s);
-void set_LED_color2 (int matrix[ROWS][COLS], int j, int i, int s);
-letter2d get_letter_matrix(char c);
+void write_static_matrix (int matrix[ROWS][COLS]);
+void write_scroll_matrix (int matrix[ROWS][COLS]);
+void write_top_half (int matrix[ROWS][COLS], int j, int i, int s);
+void write_bottom_half (int matrix[ROWS][COLS], int j, int i, int s);
+letter2d get_letter_matrix (char c);
 
 CY_ISR(RxIsr)
 {
@@ -60,22 +59,19 @@ void parseSerialBytes() {
         strcpy(data, input + 2);
         data[strlen(data)] = '\0'; // add null terminator
         
-        memset(&input[0], 0, sizeof(input));
-        // memset(&clear_screen[0], 0, sizeof(clear_screen));
-        
-        strcpy(text_line_one, "LINE ONE");
-        strcpy(text_line_two, "LINE TWO");
+        memset(&input[0], 0, sizeof(input)); // clear UART buffer
         
         // changing text line one
         if (cmd_id == TEXT_CMD_ID1) {
-            // TODO: clear text_line_one here?
-            memset(&text_line_one[0], 0, sizeof(text_line_one));
-            strcpy(text_line_one, data);
+            which_line = 1;
+            memset(&text_line[0], 0, sizeof(text_line));
+            strcpy(text_line, data);
         }
         // changing text line two
         else if (cmd_id == TEXT_CMD_ID2) {
-            memset(&text_line_two[0], 0, sizeof(text_line_two));
-            strcpy(text_line_two, data);
+            which_line = 2;
+            memset(&text_line[0], 0, sizeof(text_line));
+            strcpy(text_line, data);
         }
         // changing color of text
         else if (cmd_id == COLOR_CMD_ID) {
@@ -91,7 +87,7 @@ void parseSerialBytes() {
         }
         // clearing screen
         else if (cmd_id == CLEAR_CMD_ID) {
-            strcpy(clear_screen, data);
+            memset(&text_line[0], 0, sizeof(text_line));
         }
         // command ID not recognized
         else {
@@ -120,16 +116,15 @@ int main(void)
         
         // matrix to display pixels
         int matrix[ROWS][COLS] = { 0 };
-        int matrix2[ROWS][COLS] = { 0 };
       
         // concatenate the letters together into letters_concat
         letter2d letter;
-        int letters_concat[16][sizeof text_line_one * 11] = { 0 };
+        int letters_concat[16][sizeof text_line * 11] = { 0 };
         int start_col;
         int letter_row_sz;
         int letter_col_sz;
-        for (int d = 0; d < (int)sizeof text_line_one; d++) {
-            letter = get_letter_matrix(text_line_one[d]); // get letter bitmapping for the current character
+        for (int d = 0; d < (int)sizeof text_line; d++) {
+            letter = get_letter_matrix(text_line[d]); // get letter bitmapping for the current character
             letter_row_sz = sizeof(letter.m)/sizeof(letter.m[0]);
             letter_col_sz = sizeof(letter.m[0])/sizeof(letter.m[0][0]);
             
@@ -156,105 +151,13 @@ int main(void)
             }
         }
         
-        // concatenate the letters together into letters_concat
-        letter2d letter2;
-        int letters_concat2[16][sizeof text_line_two * 11] = { 0 };
-        int start_col2;
-        int letter_row_sz2;
-        int letter_col_sz2;
-        for (int d = 0; d < (int)sizeof text_line_two; d++) {
-            letter2 = get_letter_matrix(text_line_two[d]); // get letter bitmapping for the current character
-            letter_row_sz2 = sizeof(letter2.m)/sizeof(letter2.m[0]);
-            letter_col_sz2 = sizeof(letter2.m[0])/sizeof(letter2.m[0][0]);
-            
-            // loop through bitmapping of current letter
-            for (int r = 0; r < letter_row_sz2; r++) {
-                start_col2 = 11 * d; // start col of next letter
-                                     // 1st letter starts col 0, 2nd starts col 11, 3rd starts col 22, etc.
-                for (int c = 0; c < letter_col_sz2; c++) {
-                    letters_concat2[r][start_col2] = letter2.m[r][c]; // insert into letters_concat
-                    start_col2++;
-                }
-            }
-        }
-        
-        int sr2 = sizeof(letters_concat2)/sizeof(letters_concat2[0]);
-        int sc2 = sizeof(letters_concat2[0])/sizeof(letters_concat2[0][0]);
-        if (sc2 > COLS) { // if col size of letters_concat is greater than the col size of matrix
-            sc2 = COLS;   // reduce to col size of matrix
-        }
-        for (int r = 0; r < sr2; r++) {
-            for (int c = 0; c < sc2; c++) {
-                matrix2[r][c] = letters_concat2[r][c];     // fill first text line
-            }
-        }
-        
-        // PROBLEM
-        // set_LED_color and set_LED_color2 works for the same matrix (matrix or matrix2)
-        // but not when they are different matrices (matrix and matrix2)
-        
-        // PROBLEM
-        // scrolling loop j+s is indexing out of bounds
-        // cause of uneven text bug
-
-//        for(int j=0; j<ROWS; ++j){ 
-//            OE_Write(1); // OE high 
-//            A_Write(j);
-//            B_Write(j>>1);
-//            C_Write(j>>2); 
-//            D_Write(j>>3);
-//            for(int i=0; i<COLS; ++i){
-//                set_LED_color(matrix, j, i, 0);   // write pixels to top half
-//                set_LED_color2(matrix2, j, i, 0); // write pixels to bottom half
-//                CLK_Write(1);
-//                //CyDelayUs(1);
-//                CLK_Write(0);
-//            }
-//            LAT_Write(1);
-//            //CyDelayUs(1);
-//            LAT_Write(0);       
-//            OE_Write(0);
-//            CyDelayUs(300); // BRIGHTNESS
-//        }
-//        R1_Write(0); 
-//        B1_Write(0); 
-//        G1_Write(0);
-//        R2_Write(0); 
-//        B2_Write(0); 
-//        G2_Write(0);
-        
-        for(int s = 0; s < COLS; ++s) {
-            for(int j=0; j<ROWS; ++j){ 
-                OE_Write(1); // OE high 
-                A_Write(j);
-                B_Write(j>>1);
-                C_Write(j>>2); 
-                D_Write(j>>3);
-                for(int i=0; i<COLS; ++i){
-                    if(j+s >= COLS) {
-                        // need to write R1_Write((matrix[j][i+s-COLS])); 
-                        set_LED_color(matrix, j, i, s-COLS);
-                    } 
-                    else {
-                        set_LED_color(matrix, j, i, s);   // write pixels to top half
-                    }
-                    //set_LED_color2(matrix2, j, i, 0); // write pixels to bottom half
-                    CLK_Write(1);
-                    //CyDelayUs(1);
-                    CLK_Write(0);
-                }
-                LAT_Write(1);
-                //CyDelayUs(1);
-                LAT_Write(0);       
-                OE_Write(0);
-                CyDelayUs(300); // BRIGHTNESS
-            }
-            R1_Write(0); 
-            B1_Write(0); 
-            G1_Write(0);
-            R2_Write(0); 
-            B2_Write(0); 
-            G2_Write(0);
+        if (scroll_opt[0] == 0x02) {
+            // scroll on
+            write_scroll_matrix(matrix);
+        } 
+        else {
+            // scroll off
+            write_static_matrix(matrix);
         }
         
         i = 0; // reset index of UART buffer
@@ -262,7 +165,83 @@ int main(void)
     } // end of infinite for loop
 }
 
-void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s) {
+void write_static_matrix(int matrix[ROWS][COLS]) {
+    for(int j=0; j<ROWS; ++j){ 
+        OE_Write(1); // OE high 
+        A_Write(j);
+        B_Write(j>>1);
+        C_Write(j>>2); 
+        D_Write(j>>3);
+        for(int i=0; i<COLS; ++i){
+            if (which_line == 1) {
+                write_top_half(matrix, j, i, 0); // write pixels to top half
+            }
+            else if (which_line == 2) {
+                write_bottom_half(matrix, j, i, 0); // write pixels to bottom half
+            }
+            CLK_Write(1);
+            //CyDelayUs(1);
+            CLK_Write(0);
+        }
+        LAT_Write(1);
+        //CyDelayUs(1);
+        LAT_Write(0);       
+        OE_Write(0);
+        CyDelayUs(300); // BRIGHTNESS
+    }
+    R1_Write(0); 
+    B1_Write(0); 
+    G1_Write(0);
+    R2_Write(0); 
+    B2_Write(0); 
+    G2_Write(0);
+}
+
+void write_scroll_matrix (int matrix[ROWS][COLS]) {
+    for(int s = 0; s<COLS; ++s) {
+        for(int j=0; j<ROWS; ++j){ 
+            OE_Write(1); // OE high 
+            A_Write(j);
+            B_Write(j>>1);
+            C_Write(j>>2); 
+            D_Write(j>>3);
+            for(int i=0; i<COLS; ++i){
+                if (which_line == 1) {
+                    if(i+s >= COLS) {
+                        write_top_half(matrix, j, i, s-COLS); // write pixels to top half
+                    } 
+                    else {
+                        write_top_half(matrix, j, i, s); // write pixels to top half
+                    }
+                }
+                else if (which_line == 2) {
+                    if(i+s >= COLS) {
+                        write_bottom_half(matrix, j, i, s-COLS); // write pixels to bottom half
+                    } 
+                    else {
+                        write_bottom_half(matrix, j, i, s); // write pixels to bottom half
+                    }
+                }
+                CLK_Write(1);
+                //CyDelayUs(1);
+                CLK_Write(0);
+            }
+            LAT_Write(1);
+            //CyDelayUs(1);
+            LAT_Write(0);       
+            OE_Write(0);
+            CyDelayUs(300); // BRIGHTNESS
+        }
+        R1_Write(0); 
+        B1_Write(0); 
+        G1_Write(0);
+        R2_Write(0); 
+        B2_Write(0); 
+        G2_Write(0);
+    }
+}
+
+void write_top_half (int matrix[ROWS][COLS], int j, int i, int s) {
     switch (color_opt[0]) {
         case 'R': // red
             R1_Write((matrix[j][i+s])); 
@@ -294,7 +273,7 @@ void set_LED_color (int matrix[ROWS][COLS], int j, int i, int s) {
     }
 }
 
-void set_LED_color2 (int matrix[ROWS][COLS], int j, int i, int s) {
+void write_bottom_half (int matrix[ROWS][COLS], int j, int i, int s) {
     switch (color_opt[0]) {
         case 'R': // red
             R2_Write((matrix[j][i+s])); 
