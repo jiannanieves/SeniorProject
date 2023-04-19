@@ -24,7 +24,7 @@ const string colorOpt[] = {"WHITE","RED","GREEN","BLUE","YELLOW","CYAN","PURPLE"
 const int colorHexVal[] = {0x57, 0x52, 0x47, 0x42, 0x59, 0x43, 0x50};
 const string scrollOpt[] = {"SCROLL OFF","SCROLL ON"};
 const int scrollHexVal[] = {0x01, 0x02};
-const string animationOpt[] = {"OPTION 1","OPTION 2", "OPTION 3"};
+const string animationOpt[] = {"EFFECTS OFF","PURPLE SPARKLY","BLUE SPARKLY"};
 const int animationHexVal[] = {0x01, 0x02, 0x03};
 
 string enterText();
@@ -43,7 +43,7 @@ int main() {
         cout << "1 - Text" << endl;
         cout << "2 - Color" << endl;
         cout << "3 - Scroll" << endl;
-        cout << "4 - Animation" << endl;
+        cout << "4 - Text Effects" << endl;
         cout << "5 - Clear Screen" << endl;
         cout << "q - Exit" << endl;
         cout << "Enter Option> ";
@@ -63,7 +63,7 @@ int main() {
             enterScroll();
         }
         else if (menuOpt == "4") {
-            cout << "\n======== ANIMATION OPTIONS ========" << endl;
+            cout << "\n======== TEXT EFFECTS OPTIONS ========" << endl;
             enterAnimation();
         }
         else if (menuOpt == "5") {
@@ -98,6 +98,9 @@ string enterText() {
         if (menuOpt == "1") {
             cout << "First Line> ";
             getline(cin, userText);
+            for (int i = 0; i < userText.length(); i++) {
+                userText[i] = toupper(userText[i]);
+            }
             cin.clear();
             int num_bytes;
             char *bytes_to_send = formatSerialBytes("text_line_1", userText, &num_bytes);
@@ -108,6 +111,9 @@ string enterText() {
         else if (menuOpt == "2") {
             cout << "Second Line> ";
             getline(cin, userText);
+            for (int i = 0; i < userText.length(); i++) {
+                userText[i] = toupper(userText[i]);
+            }
             cin.clear();
             int num_bytes;
             char *bytes_to_send = formatSerialBytes("text_line_2", userText, &num_bytes);
