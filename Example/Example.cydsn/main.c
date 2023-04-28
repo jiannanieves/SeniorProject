@@ -24,11 +24,11 @@
 #define ANIMATION_CMD_ID 0x28
 #define CLEAR_CMD_ID     0x29
 
-char input[16]; // Buffer for UART data
+char input[32]; // Buffer for UART data
 int i = 0;      // Index of buffer
 
 int which_line = 1;     // determine which line to write, 1st line default
-char text_line[16];     // store text
+char text_line[32];     // store text
 char color_opt[1];      // store color option
 char scroll_opt[1];     // store scroll option
 char animation_opt[1];  // store animation option
@@ -81,6 +81,7 @@ void parseSerialBytes() {
         }
         // changing color of text
         else if (cmd_id == COLOR_CMD_ID) {
+            strcpy(animation_opt, (char*)0x01);
             strcpy(color_opt, data);
         } 
         // changing scroll speed of text
